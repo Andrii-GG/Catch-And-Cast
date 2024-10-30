@@ -1,0 +1,6 @@
+@CatchAndCast.Api_HostAddress = http://localhost:5239
+
+GET {{CatchAndCast.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
