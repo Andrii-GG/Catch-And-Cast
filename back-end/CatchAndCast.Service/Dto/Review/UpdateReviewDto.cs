@@ -1,8 +1,8 @@
 ﻿namespace CatchAndCast.Service.Dto.Review;
 
-public class UpdateRateDto
+public class UpdateReviewDto
 {
     public int Id { get; set; }
     public double Rate { get; set; }
-    public int ProductId { get; set; }
+    public string Comment { get; set; }
 }

@@ -18,6 +18,10 @@ public class ReviewService : IReviewService
 
     public async Task CreateReview(CreateReviewDto dto)
     {
+        if (context.Reviews.Where(x => x.ProductId == dto.ProductId).ToList().FirstOrDefault(x => x.UserId == currentUserService.UserId) is not null)
+        {
+            throw new Exception("Nono");
+        }
         var product = await context.Products.FindAsync(dto.ProductId);
         product.Rating = (product.Rating * product.CountRate + dto.Rate) / (product.CountRate + 1);
         product.CountRate += 1; 
@@ -29,6 +33,25 @@ public class ReviewService : IReviewService
             UserId = currentUserService.UserId
         };
         await context.Reviews.AddAsync(item);
+        await context.SaveChangesAsync();
+    }
+
+    public async Task DeleteReview(int id)
+    {
+        var item = await context.Reviews.FindAsync(id);
+        var product = await context.Products.FindAsync(item.ProductId);
+        var counter = product.CountRate - 1;
+        if (counter > 0)
+        {
+            product.Rating = ((product.Rating * product.CountRate) - item.Rate) / counter;
+            product.CountRate = counter;
+        }
+        else
+        {
+            product.Rating = 0;
+            product.CountRate = counter;
+        }
+        context.Reviews.Remove(item);
         await context.SaveChangesAsync();
     }
 
@@ -51,11 +74,13 @@ public class ReviewService : IReviewService
         return finishItems;
     }
 
-    public async Task UpdateRate(UpdateRateDto dto)
+    public async Task UpdateRate(UpdateReviewDto dto)
     {
         var item = await context.Reviews.FindAsync(dto.Id);
-        var product = await context.Products.FindAsync(dto.ProductId);
+        var product = await context.Products.FindAsync(item.ProductId);
         product.Rating = ((product.Rating * product.CountRate) - item.Rate + dto.Rate) / product.CountRate;
+        item.Rate = dto.Rate;
+        item.Comment = dto.Comment;
         await context.SaveChangesAsync();
     }
 }

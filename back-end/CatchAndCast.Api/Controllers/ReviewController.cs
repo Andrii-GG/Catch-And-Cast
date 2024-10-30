@@ -27,12 +27,24 @@ namespace CatchAndCast.Api.Controllers
         {
             var item = await context.GetByProductId(id);
             return Ok(item);
-           
+
         }
         [HttpPost]
         public async Task<ActionResult> Post(CreateReviewDto dto)
         {
             await context.CreateReview(dto);
+            return Ok();
+        }
+        [HttpPut]
+        public async Task<ActionResult> Put(UpdateReviewDto dto)
+        {
+            await context.UpdateRate(dto);
+            return Ok();
+        }
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> Delete(int id)
+        {
+            await context.DeleteReview(id);
             return Ok();
         }
     }
