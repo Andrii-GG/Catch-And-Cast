@@ -36,6 +36,10 @@ function ItemPage({ breadcrumbNameMap }) {
     setPathnames(history);
   }, [window.location.pathname]);
 
+  useEffect(()=>{
+    window.scrollTo(0, 0);
+  }, [])
+
   if (false) {
     return <div className="itemPage">Товар не знайдений</div>;
   }

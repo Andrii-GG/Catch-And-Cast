@@ -1,20 +1,15 @@
 import React, { useState, useEffect, useRef } from "react";
 import ReactDOM from "react-dom";
-
-let category = [
-  { name: "Вудилища", CategoryImageUrl: "/icons/bag.svg" },
-  { name: "Котушки", CategoryImageUrl: "/icons/bag.svg" },
-  { name: "Приманки", CategoryImageUrl: "/icons/bag.svg" },
-  { name: "Харчування", CategoryImageUrl: "/icons/bag.svg" },
-  { name: "Гачки", CategoryImageUrl: "/icons/bag.svg" },
-];
+import useFetch from "./useFetch";
 
 const Dropdown = ({ isOpen, setOpen, setFilter }) => {
+  const { data: category } = useFetch("http://localhost:5000/api/category");
+
   useEffect(() => {
     const dropdownMenu = document.querySelector(".dropdown-wall");
 
     if (dropdownMenu) {
-      if (isOpen) { 
+      if (isOpen) {
         dropdownMenu.style.display = "block";
         setTimeout(() => {
           dropdownMenu.classList.add("dropdown-menu-show");
@@ -29,11 +24,19 @@ const Dropdown = ({ isOpen, setOpen, setFilter }) => {
     dropdownMenu.style.width = window.getComputedStyle(
       document.querySelector(".header-category")
     ).width;
-
+    debugger;
     let inputPosition = document.querySelector(".home-inputPosition");
     if (inputPosition) {
       inputPosition = inputPosition.getBoundingClientRect();
-      dropdownMenu.style.top = inputPosition.top + 40 + "px";
+      if (window.scrollY - 140 < inputPosition.top) {
+        dropdownMenu.style.top = inputPosition.top + 40 + "px";
+      } else {
+        dropdownMenu.style.top =
+          document.querySelector(".header-category").getBoundingClientRect()
+            .top +
+          40 +
+          "px";
+      }
     }
 
     dropdownMenu.style.left =
@@ -78,16 +81,17 @@ const Dropdown = ({ isOpen, setOpen, setFilter }) => {
           >
             Всі товари
           </li>
-          {category.map((item) => (
-            <li
-              key={item.name}
-              onClick={() => {
-                handleClick(item.name);
-              }}
-            >
-              {item.name}
-            </li>
-          ))}
+          {category &&
+            category.map((item) => (
+              <li
+                key={item.categoryName}
+                onClick={() => {
+                  handleClick(item.categoryName);
+                }}
+              >
+                {item.categoryName}
+              </li>
+            ))}
         </ul>
       </div>
     </div>,

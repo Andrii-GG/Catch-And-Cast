@@ -46,6 +46,7 @@ function CartPage() {
 
   useEffect(() => {
     setPrice(items.reduce((sum, item) => sum + item.price, 0));
+    window.scrollTo(0, 0);
 
     const path = [window.location.pathname];
     localStorage.setItem("history", JSON.stringify(path));

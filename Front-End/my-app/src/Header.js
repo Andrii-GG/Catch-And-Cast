@@ -58,7 +58,7 @@ function Header() {
       .getBoundingClientRect();
     const inputGroup = document.querySelector(".header-input-group");
     const inputGroupWidth = window.getComputedStyle(inputGroup).width;
-    debugger;
+    
     if (
       position - 140 >= inputPosition.top &&
       inputGroup.style.position == "absolute"

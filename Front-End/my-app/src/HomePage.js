@@ -3,63 +3,26 @@ import ReactDOM from "react-dom";
 import Position from "./Position";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
-let category = [
-  { name: "Вудилища", CategoryImageUrl: "/icons/bag.svg" },
-  { name: "Котушки", CategoryImageUrl: "/icons/bag.svg" },
-  { name: "Приманки", CategoryImageUrl: "/icons/bag.svg" },
-  { name: "Харчування", CategoryImageUrl: "/icons/bag.svg" },
-  { name: "Гачки", CategoryImageUrl: "/icons/bag.svg" },
-];
-
-let items = [
-  {
-    id: 121212,
-    name: "Вудка крута",
-    price: 23999,
-    rating: 5,
-    description:
-      "Ловить рибу. можна сісти на неї і полетіти в космос. Матеріал: залізо з венери та павутина павука.",
-    imageUrl: "/example.png",
-    favorite: true,
-  },
-  {
-    id: 3223232,
-    name: "Вудка не дуже",
-    price: 599,
-    rating: 1,
-    description:
-      "Не ловить рибу. можна гнати корову. Матеріал: дуб і нитка проста.",
-    imageUrl: "/example.png",
-    favorite: false,
-  },
-];
+import useFetch from "./useFetch";
 
 function HomePage() {
   const [isPositionOpen, setIsPositionOpen] = useState(false);
   const [catalog, setCatalog] = useState("Популярні товари");
   const navigate = useNavigate();
-
-  // const [displayedItems, setDisplayedItems] = useState([]);
-  // useEffect(() => {
-  //   const timer = setTimeout(() => {
-  //     if (items.length > displayedItems.length) {
-  //       setDisplayedItems((prevItems) => [
-  //         ...prevItems,
-  //         items[prevItems.length],
-  //       ]);
-  //     }
-  //   }, 100); // Затримка 1 секунда
-
-  //   return () => clearTimeout(timer); // Очищення таймера
-  // }, [displayedItems, items]); // Залежності
-
-  function openPositionModal() {
-    setIsPositionOpen(true);
-  }
+  const {
+    data: items,
+    loading,
+    error,
+  } = useFetch("http://localhost:5000/api/product");
+  const { data: category } = useFetch("http://localhost:5000/api/category");
 
   useEffect(() => {
     localStorage.setItem("position", "Київ");
   }, []);
+
+  function openPositionModal() {
+    setIsPositionOpen(true);
+  }
 
   useEffect(() => {
     const path = [window.location.pathname];
@@ -101,17 +64,17 @@ function HomePage() {
 
   return (
     <div className="homePage">
-    <section className="home-block">
-    <img
-        src="logo-header.svg"
-        alt="logo"
-        className="header-logo"
-        onClick={() => {
-          navigate("/");
-        }}
-      ></img>
-      <div className="home-inputPosition"></div>
-    </section>
+      <section className="home-block">
+        <img
+          src="logo-header.svg"
+          alt="logo"
+          className="header-logo"
+          onClick={() => {
+            navigate("/");
+          }}
+        ></img>
+        <div className="home-inputPosition"></div>
+      </section>
       <section className="catalog-block">
         <div className="catalog-title">
           <img
@@ -136,20 +99,25 @@ function HomePage() {
         </div>
         <div className="catalog-items">
           <ul>
-            {category.map((item) => {
-              return (
-                <li
-                  className="category-item"
-                  key={item.name}
-                  onClick={() => {
-                    setCatalog(item.name);
-                  }}
-                >
-                  <img src={item.CategoryImageUrl} alt={item.name}></img>
-                  <span> {item.name}</span>
-                </li>
-              );
-            })}
+            {category
+              ? category.map((item) => {
+                  return (
+                    <li
+                      className="category-item"
+                      key={item.categoryName}
+                      onClick={() => {
+                        setCatalog(item.categoryName);
+                      }}
+                    >
+                      <img
+                        src={item.categoryImageUrl}
+                        alt={item.categoryName}
+                      ></img>
+                      <span> {item.categoryName}</span>
+                    </li>
+                  );
+                })
+              : ""}
           </ul>
         </div>
       </section>
@@ -169,63 +137,71 @@ function HomePage() {
         </ul>
       </nav>
       <section className="items-container">
-        {items.map((item) => {
-          return (
-            <div className="item-block" key={item.id} id={item.id}>
-              <img
-                alt={item.name}
-                src={item.imageUrl}
-                className="item-img"
-                onClick={() => {
-                  goToItem(item);
-                }}
-              ></img>
-              <div className="item-heart-icon">
-                <img
-                  src={`/icons/heart-${
-                    item.favorite ? "black-filled" : "black"
-                  }.svg`}
-                  className="icon-w-30 "
-                ></img>
-              </div>
-              <div className="item-share-icon">
-                <img
-                  src="/icons/share.svg"
-                  className="icon-w-30 "
-                  onClick={shareButton}
-                ></img>
-              </div>
-              <span
-                className="item-title"
-                onClick={() => {
-                  goToItem(item);
-                }}
-              >
-                {item.name}
-              </span>
-              <span className="item-description">
-                {item.description} <br></br>
-                <img
-                  src={`/icons/rating-${item.rating}.svg`}
-                  className="item-rating-icon"
-                ></img>
-              </span>
-              <span className="item-price">
-                {item.price.toLocaleString()} грн
-              </span>
-              <span className="item-vertical"></span>
-              <span className="item-horizontal"></span>
-              <button className="buy-button">
-                <img src="icons/bag.svg"></img>
-                <span>Купити</span>
-              </button>
-              <button className="cart-button">
-                <img src="icons/cart-black.svg"></img>
-                <span>У корзину</span>
-              </button>
-            </div>
-          );
-        })}
+        {loading ? <p>Завантаження...</p> : ""}
+        {error ? <p>Error: {error}</p> : ""}
+        {items
+          ? items.map((item) => {
+               const findCategory = category && category.find(
+                (cat) => cat.id === item.categoryId
+              );
+              return (catalog === "Популярні товари" || catalog === findCategory.categoryName) && (
+                <div className="item-block" key={item.id} id={item.id}>
+                  <img
+                    alt={item.productName}
+                    src={item.productImageUrl}
+                    className="item-img"
+                    onClick={() => {
+                      goToItem(item);
+                    }}
+                  ></img>
+                  <div className="item-heart-icon">
+                    <img
+                      src={`/icons/heart-${
+                        // item.favorite
+                        false ? "black-filled" : "black"
+                      }.svg`}
+                      className="icon-w-30 "
+                    ></img>
+                  </div>
+                  <div className="item-share-icon">
+                    <img
+                      src="/icons/share.svg"
+                      className="icon-w-30 "
+                      onClick={shareButton}
+                    ></img>
+                  </div>
+                  <span
+                    className="item-title"
+                    onClick={() => {
+                      goToItem(item);
+                    }}
+                  >
+                    {item.productName}
+                  </span>
+                  <span className="item-description">
+                    {item.productDescription} <br></br>
+                    <img
+                      src={`/icons/rating-${item.rating}.svg`}
+                      className="item-rating-icon"
+                    ></img>
+                  </span>
+                  <span className="item-price">
+                    {item.productPrice.toLocaleString()} грн
+                  </span>
+                  <span className="item-vertical"></span>
+                  <span className="item-horizontal"></span>
+                  <button className="buy-button">
+                    <img src="icons/bag.svg"></img>
+                    <span>Купити</span>
+                  </button>
+                  <button className="cart-button">
+                    <img src="icons/cart-black.svg"></img>
+                    <span>У корзину</span>
+                  </button>
+                </div>
+              );
+            })
+          : null}
       </section>
       <Position isOpen={isPositionOpen} setOpen={setIsPositionOpen}></Position>
       <span className="share-notice">Посилання на товар скопійоване!</span>

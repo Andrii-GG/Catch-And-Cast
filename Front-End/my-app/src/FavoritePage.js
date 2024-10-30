@@ -35,6 +35,10 @@ function FavoritePage() {
     const path = [window.location.pathname];
     localStorage.setItem("history", JSON.stringify(path));
   }, [window.location.pathname]);
+  
+  useEffect(()=>{
+    window.scrollTo(0, 0);
+  }, [])
 
   function goToItem(item) {
     navigate(`/${item.id}`);
