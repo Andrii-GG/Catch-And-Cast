@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("CatchAndCast.Api")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a6cf70b638384896c90b8d6fb6705b13da58a9b4")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+80ca48574cb24e746fb3d243554c0eca22c58a76")]
 [assembly: System.Reflection.AssemblyProductAttribute("CatchAndCast.Api")]
 [assembly: System.Reflection.AssemblyTitleAttribute("CatchAndCast.Api")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
