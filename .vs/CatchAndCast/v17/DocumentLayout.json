@@ -1,0 +1,109 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\admin\\source\\repos\\CatchAndCast\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\admin\\source\\repos\\CatchAndCast\\CatchAndCast.Service\\Services\\ReviewService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:CatchAndCast.Service\\Services\\ReviewService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\admin\\source\\repos\\CatchAndCast\\CatchAndCast.Service\\Dto\\Review\\UpdateRateDto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:CatchAndCast.Service\\Dto\\Review\\UpdateRateDto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\admin\\source\\repos\\CatchAndCast\\CatchAndCast.Data\\Models\\Product.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:CatchAndCast.Data\\Models\\Product.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\admin\\source\\repos\\CatchAndCast\\CatchAndCast.Api\\Controllers\\ReviewController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:CatchAndCast.Api\\Controllers\\ReviewController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\admin\\source\\repos\\CatchAndCast\\CatchAndCast.Service\\Interfaces\\IReviewService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:CatchAndCast.Service\\Interfaces\\IReviewService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 5,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "UpdateRateDto.cs",
+              "DocumentMoniker": "C:\\Users\\admin\\source\\repos\\CatchAndCast\\CatchAndCast.Service\\Dto\\Review\\UpdateRateDto.cs",
+              "RelativeDocumentMoniker": "CatchAndCast.Service\\Dto\\Review\\UpdateRateDto.cs",
+              "ToolTip": "C:\\Users\\admin\\source\\repos\\CatchAndCast\\CatchAndCast.Service\\Dto\\Review\\UpdateRateDto.cs",
+              "RelativeToolTip": "CatchAndCast.Service\\Dto\\Review\\UpdateRateDto.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAYAAAAXAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-28T14:44:30.703Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Product.cs",
+              "DocumentMoniker": "C:\\Users\\admin\\source\\repos\\CatchAndCast\\CatchAndCast.Data\\Models\\Product.cs",
+              "RelativeDocumentMoniker": "CatchAndCast.Data\\Models\\Product.cs",
+              "ToolTip": "C:\\Users\\admin\\source\\repos\\CatchAndCast\\CatchAndCast.Data\\Models\\Product.cs",
+              "RelativeToolTip": "CatchAndCast.Data\\Models\\Product.cs",
+              "ViewState": "AQIAAAMAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-26T19:11:51.246Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "ReviewController.cs",
+              "DocumentMoniker": "C:\\Users\\admin\\source\\repos\\CatchAndCast\\CatchAndCast.Api\\Controllers\\ReviewController.cs",
+              "RelativeDocumentMoniker": "CatchAndCast.Api\\Controllers\\ReviewController.cs",
+              "ToolTip": "C:\\Users\\admin\\source\\repos\\CatchAndCast\\CatchAndCast.Api\\Controllers\\ReviewController.cs",
+              "RelativeToolTip": "CatchAndCast.Api\\Controllers\\ReviewController.cs",
+              "ViewState": "AQIAAAYAAAAAAAAAAAAAABsAAAA2AAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-26T18:48:03.447Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "ReviewService.cs",
+              "DocumentMoniker": "C:\\Users\\admin\\source\\repos\\CatchAndCast\\CatchAndCast.Service\\Services\\ReviewService.cs",
+              "RelativeDocumentMoniker": "CatchAndCast.Service\\Services\\ReviewService.cs",
+              "ToolTip": "C:\\Users\\admin\\source\\repos\\CatchAndCast\\CatchAndCast.Service\\Services\\ReviewService.cs",
+              "RelativeToolTip": "CatchAndCast.Service\\Services\\ReviewService.cs",
+              "ViewState": "AQIAAC0AAAAAAAAAAAAWwDkAAABrAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-26T18:46:42.744Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "IReviewService.cs",
+              "DocumentMoniker": "C:\\Users\\admin\\source\\repos\\CatchAndCast\\CatchAndCast.Service\\Interfaces\\IReviewService.cs",
+              "RelativeDocumentMoniker": "CatchAndCast.Service\\Interfaces\\IReviewService.cs",
+              "ToolTip": "C:\\Users\\admin\\source\\repos\\CatchAndCast\\CatchAndCast.Service\\Interfaces\\IReviewService.cs",
+              "RelativeToolTip": "CatchAndCast.Service\\Interfaces\\IReviewService.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAkAAAAlAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-26T18:43:46.16Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

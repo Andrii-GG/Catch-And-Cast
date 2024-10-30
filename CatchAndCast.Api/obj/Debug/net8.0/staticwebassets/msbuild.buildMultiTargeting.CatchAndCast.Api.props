@@ -1,3 +1,0 @@
-﻿<Project>
-  <Import Project="..\build\CatchAndCast.Api.props" />
-</Project>
