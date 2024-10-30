@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("CatchAndCast.Service")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+80ca48574cb24e746fb3d243554c0eca22c58a76")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c90b09d8a3c9aa09aceeb511b332831f75ea6d4e")]
 [assembly: System.Reflection.AssemblyProductAttribute("CatchAndCast.Service")]
 [assembly: System.Reflection.AssemblyTitleAttribute("CatchAndCast.Service")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
