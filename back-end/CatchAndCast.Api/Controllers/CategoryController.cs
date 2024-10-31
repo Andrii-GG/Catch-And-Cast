@@ -1,4 +1,5 @@
-﻿using CatchAndCast.Service.Dto.Category;
+﻿using CatchAndCast.Data.Models;
+using CatchAndCast.Service.Dto.Category;
 using CatchAndCast.Service.Dto.User;
 using CatchAndCast.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -21,6 +22,12 @@ namespace CatchAndCast.Api.Controllers
         {
             var items = await categoryService.GetAsync();
             return Ok(items);
+        }
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Category>> Get(int id)
+        {
+            var item = await categoryService.GetAsync(id);
+            return Ok(item);
         }
 
         [HttpPost]

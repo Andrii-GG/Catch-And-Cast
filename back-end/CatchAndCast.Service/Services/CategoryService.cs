@@ -70,4 +70,11 @@ public class CategoryService : ICategoryService
         context.Remove(item);
         await context.SaveChangesAsync();
     }
+
+    public async Task<Category> GetAsync(int id)
+    {
+        var item = await context.Categories.FindAsync(id);
+
+        return item;
+    }
 }

@@ -7,6 +7,7 @@ namespace CatchAndCast.Service.Interfaces;
 public interface ICategoryService
 {
     Task<List<Category>> GetAsync();
+    Task<Category> GetAsync(int id);
     Task CreateAsync(CreateCategoryDto itemDto);
     Task CreateAsync(CreateCategoryWithImageDto itemDto);
     Task UpdateAsync(UpdateCategoryDto itemDto);
