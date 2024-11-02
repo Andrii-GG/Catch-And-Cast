@@ -1,3 +1,4 @@
+using CatchAndCast.Api.Middlewares;
 using CatchAndCast.Api.Service;
 using CatchAndCast.Data.Context;
 using CatchAndCast.Data.Models;
@@ -91,6 +92,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+app.UseMiddleware<ExceptionMiddleware>();
 app.UseHttpsRedirection();
 
 app.UseCors();

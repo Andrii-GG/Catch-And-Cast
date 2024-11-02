@@ -3,6 +3,7 @@ using CatchAndCast.Data.Context;
 using CatchAndCast.Data.Models;
 using CatchAndCast.Service.Dto.Category;
 using CatchAndCast.Service.Dto.User;
+using CatchAndCast.Service.Exceptions;
 using CatchAndCast.Service.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -41,6 +42,9 @@ public class CategoryService : ICategoryService
     public async Task UpdateAsync(UpdateImageInCategoryDto itemDto)
     {
         var item = await context.Categories.FindAsync(itemDto.Id);
+        if (item == null) {
+            throw new ItemNotFound();
+        }
         item.CategoryImageUrl = itemDto.NewImageUrl;
         await context.SaveChangesAsync();
     }
