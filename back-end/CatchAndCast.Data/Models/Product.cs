@@ -11,6 +11,7 @@ public class Product
     public int CategoryId { get; set; }
     public string? ProductDescription { get; set; }
     public double? Rating { get; set; }
+    public int AmountOfProduct { get; set; }
     public int? CountRate { get; set; }
     public string? ProductImageUrl { get; set; }
     public Category Category { get; set; }

@@ -59,6 +59,7 @@ public class ProductService : IProductService
             ProductDescription = item.ProductDescription,
             ProductImageUrl = item.ProductImageUrl,
             ProductPrice = item.ProductPrice,
+            AmountOfProduct = item.AmountOfProduct,
             CreatedAt = item.CreatedAt,
             Rating = item.Rating,
             CountRate = item.CountRate,
@@ -75,6 +76,7 @@ public class ProductService : IProductService
             ProductPrice = dto.ProductPrice,
             ProductDescription = dto.ProductDescription,
             ProductImageUrl = dto.ProductImageUrl,
+            AmountOfProduct = dto.AmountOfProduct,
             CategoryId = dto.CategoryId,
             CreatedAt = DateTime.Now
         };
