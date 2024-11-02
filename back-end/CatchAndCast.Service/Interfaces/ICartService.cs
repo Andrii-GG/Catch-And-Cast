@@ -10,4 +10,5 @@ public interface ICartService
     Task Post(CreateCartItemDto dto);
     Task Put(UpdateCartItemDto dto);
     Task Delete(int id);
+    Task Delete(DeleteCartById dto);
 }

@@ -1,7 +1,6 @@
 ﻿namespace CatchAndCast.Service.Dto.Cart;
 
-public class UpdateCartItemDto
+public class DeleteCartById
 {
     public int ProductId { get; set; }
-    public bool Increment { get; set; }
 }

@@ -44,6 +44,12 @@ namespace CatchAndCast.Api.Controllers
         {
             await context.Delete(id);
             return Ok();
+        } 
+        [HttpDelete("product-id")]
+        public async Task<ActionResult> Delete(DeleteCartById dto)
+        {
+            await context.Delete(dto);
+            return Ok();
         }
     }
 }

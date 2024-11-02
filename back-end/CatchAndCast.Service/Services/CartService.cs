@@ -32,6 +32,17 @@ public class CartService : ICartService
         await context.SaveChangesAsync();
     }
 
+    public async Task Delete(DeleteCartById dto)
+    {
+        var item = await context.Carts.FirstOrDefaultAsync(x => x.ProductId == dto.ProductId && x.UserId == currentUserService.UserId);
+        if (item is null)
+        {
+            throw new ItemNotFound();
+        }
+        context.Carts.Remove(item);
+        await context.SaveChangesAsync();
+    }
+
     public async Task<IEnumerable<GetCartItemsDto>> Get()
     {
         var items = await context.Carts.Where(x=>x.UserId == currentUserService.UserId).ToListAsync();
@@ -51,31 +62,41 @@ public class CartService : ICartService
 
     public async Task Post(CreateCartItemDto dto)
     {
-        if(await context.Products.FindAsync() is null)
+        var product = await context.Products.FindAsync(dto.ProductId);
+        if (product is null)
         {
             throw new ItemNotFound();
         }
-        var items = context.Carts.FirstOrDefault(x => x.ProductId == dto.ProductId && x.UserId == currentUserService.UserId);
-        if (items is not null)
+
+        var existingCartItem = await context.Carts
+            .FirstOrDefaultAsync(x => x.ProductId == dto.ProductId && x.UserId == currentUserService.UserId);
+
+        if (existingCartItem is not null)
         {
-            items.CounterProducts += 1;
-            await context.SaveChangesAsync();
+            existingCartItem.CounterProducts += 1;
         }
         else
         {
-            var item = new Cart
+            var newCartItem = new Cart
             {
                 ProductId = dto.ProductId,
-                UserId = currentUserService.UserId
+                UserId = currentUserService.UserId,
+                CounterProducts = 1
             };
-            await context.Carts.AddAsync(item);
+            await context.Carts.AddAsync(newCartItem);
         }
+
         await context.SaveChangesAsync();
     }
 
+
     public async Task Put(UpdateCartItemDto dto)
     {
-        var item = await context.Carts.FindAsync(dto.CartId);
+        if(currentUserService.UserId is null)
+        {
+            throw new UserNotUnauthorized();
+        }
+        var item = await context.Carts.FirstOrDefaultAsync(x=>x.ProductId == dto.ProductId && x.UserId == currentUserService.UserId);
         if (item is null)
         {
             throw new ItemNotFound();

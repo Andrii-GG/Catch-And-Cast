@@ -1,4 +1,5 @@
-﻿using CatchAndCast.Service.Dto.Favorite;
+﻿using CatchAndCast.Data.Models;
+using CatchAndCast.Service.Dto.Favorite;
 using CatchAndCast.Service.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -24,6 +25,12 @@ namespace CatchAndCast.Api.Controllers
             var items = await context.Get();
             return Ok(items);
         }
+        [HttpGet("products")]
+        public async Task<ActionResult<IEnumerable<Product>>> GetAsync()
+        {
+            var items = await context.GetAsync();
+            return Ok(items);
+        }
         [HttpPost]
         public async Task<ActionResult> Post(CreateFavoriteDto dto)
         {
@@ -34,6 +41,12 @@ namespace CatchAndCast.Api.Controllers
         public async Task<ActionResult> Delete(int id)
         {
             await context.Delete(id);
+            return Ok();
+        }
+        [HttpDelete("product-id")]
+        public async Task<ActionResult> Delete(DeleteFavoriteById dto)
+        {
+            await context.Delete(dto);
             return Ok();
         }
     }

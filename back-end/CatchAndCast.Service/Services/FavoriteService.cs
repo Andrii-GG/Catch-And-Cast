@@ -4,6 +4,8 @@ using CatchAndCast.Service.Dto.Favorite;
 using CatchAndCast.Service.Exceptions;
 using CatchAndCast.Service.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client;
+using System.Xml;
 
 namespace CatchAndCast.Service.Services;
 
@@ -32,6 +34,17 @@ public class FavoriteService : IFavoriteService
         await context.SaveChangesAsync();
     }
 
+    public async Task Delete(DeleteFavoriteById dto)
+    {
+        var item = await  context.Favorites.FirstOrDefaultAsync(x => x.ProductId == dto.ProductId && x.UserId == currentUser.UserId);
+        if(item is null)
+        {
+            throw new ItemNotFound();
+        }
+        context.Favorites.Remove(item);
+        await context.SaveChangesAsync();
+    }
+
     public async Task<IEnumerable<GetFavoritesProductDto>> Get()
     {
         var items = await context.Favorites.ToListAsync();
@@ -41,6 +54,14 @@ public class FavoriteService : IFavoriteService
             ProductId = x.ProductId
         });
         return finishItems;
+    }
+
+    public async Task<IEnumerable<Product>> GetAsync()
+    {
+        var list = await context.Favorites.Where(x => x.UserId == currentUser.UserId).Select(x => x.ProductId).ToListAsync();
+        var products = await context.Products.Where(x=> list.Contains(x.Id)).ToListAsync();
+
+        return products;
     }
 
     public async Task Post(CreateFavoriteDto dto)

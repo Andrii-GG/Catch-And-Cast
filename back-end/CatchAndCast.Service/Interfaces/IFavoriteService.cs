@@ -6,6 +6,8 @@ namespace CatchAndCast.Service.Interfaces;
 public interface IFavoriteService
 {
     Task<IEnumerable<GetFavoritesProductDto>> Get();
+    Task<IEnumerable<Product>> GetAsync();
     Task Post(CreateFavoriteDto dto);
     Task Delete(int id);
+    Task Delete(DeleteFavoriteById dto);
 }
