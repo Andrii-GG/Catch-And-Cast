@@ -20,17 +20,6 @@ public class CategoryService : ICategoryService
     {
         return await context.Categories.ToListAsync();
     }
-    public async Task CreateAsync(CreateCategoryDto itemDto)
-    {
-        var category = new Category
-        {
-            CategoryName = itemDto.CategoryName,
-            CategoryImageUrl = ""
-        };
-        context.Categories.Add(category);
-        await context.SaveChangesAsync();
-    }
-
     public async Task CreateAsync(CreateCategoryWithImageDto itemDto)
     {
         var category = new Category
@@ -44,30 +33,22 @@ public class CategoryService : ICategoryService
 
     public async Task UpdateAsync(UpdateCategoryDto itemDto)
     {
-        var item = await context.Categories.FirstOrDefaultAsync(x => x.CategoryName == itemDto.CategoryName);
+        var item = await context.Categories.FindAsync(itemDto.Id);
         item.CategoryName = itemDto.ChangeName;
         await context.SaveChangesAsync();
     }
 
     public async Task UpdateAsync(UpdateImageInCategoryDto itemDto)
     {
-        var item = await context.Categories.FirstOrDefaultAsync(x => x.CategoryName == itemDto.CategoryName);
+        var item = await context.Categories.FindAsync(itemDto.Id);
         item.CategoryImageUrl = itemDto.NewImageUrl;
-
         await context.SaveChangesAsync();
     }
 
-    public async Task DeleteByIdAsync(DeleteUserByIdDto dto)
+    public async Task DeleteByIdAsync(int id)
     {
-        var item = await context.Categories.FindAsync(dto.Id);
-        context.Remove(item);
-        await context.SaveChangesAsync();
-    }
-
-    public async Task DeleteByNameAsync(DeleteUserByNameDto dto)
-    {
-        var item = await context.Categories.FirstOrDefaultAsync(x=>x.CategoryName == dto.CategoryName);
-        context.Remove(item);
+        var item = await context.Categories.FindAsync(id);
+        context.Categories.Remove(item);
         await context.SaveChangesAsync();
     }
 

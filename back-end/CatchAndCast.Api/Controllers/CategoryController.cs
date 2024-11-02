@@ -1,10 +1,7 @@
 ﻿using CatchAndCast.Data.Models;
 using CatchAndCast.Service.Dto.Category;
-using CatchAndCast.Service.Dto.User;
 using CatchAndCast.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Update.Internal;
-
 namespace CatchAndCast.Api.Controllers
 {
     [Route("api/category")]
@@ -29,14 +26,7 @@ namespace CatchAndCast.Api.Controllers
             var item = await categoryService.GetAsync(id);
             return Ok(item);
         }
-
         [HttpPost]
-        public async Task<ActionResult> Post(CreateCategoryDto item)
-        {
-            await categoryService.CreateAsync(item);
-            return Ok();
-        }
-        [HttpPost("image")]
         public async Task<ActionResult> Post(CreateCategoryWithImageDto item)
         {
             await categoryService.CreateAsync(item);
@@ -54,16 +44,10 @@ namespace CatchAndCast.Api.Controllers
             await categoryService.UpdateAsync(item);
             return Ok();
         }
-        [HttpDelete("id")]
-        public async Task<ActionResult> Delete(DeleteUserByIdDto dto)
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> Delete(int id)
         {
-            await categoryService.DeleteByIdAsync(dto);
-            return Ok();
-        }
-        [HttpDelete("name")]
-        public async Task<ActionResult> Delete(DeleteUserByNameDto dto)
-        {
-            await categoryService.DeleteByNameAsync(dto);
+            await categoryService.DeleteByIdAsync(id);
             return Ok();
         }
     }
