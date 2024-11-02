@@ -1,6 +1,7 @@
 ﻿using CatchAndCast.Data.Context;
 using CatchAndCast.Data.Models;
 using CatchAndCast.Service.Dto.User;
+using CatchAndCast.Service.Exceptions;
 using CatchAndCast.Service.Interfaces;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
@@ -36,7 +37,6 @@ public class CurrentUserService : ICurrentUserService
                 SecondName = model.SecondName,
                 PhoneNumber = model.PhoneNumber,
                 CreatedAt = DateTime.Now
-
             };
 
         return user;
@@ -44,7 +44,10 @@ public class CurrentUserService : ICurrentUserService
     public async Task UpdateAsync(UpdateUserDto item)
     {
         var user = await context.Users.FindAsync(UserId);
-
+        if (user is null)
+        {
+            throw new UserNotFound();
+        }
         user.FirstName = item.FirstName;
         user.SecondName = item.SecondName;
         user.PhoneNumber = item.PhoneNumber;
@@ -53,26 +56,42 @@ public class CurrentUserService : ICurrentUserService
 
     public async Task UpdateFirstNameAsync(UpdateFirstNameDto dto)
     {
-        var item = await context.Users.FindAsync(UserId);
-        item.FirstName = dto.FirstName;
+        var user = await context.Users.FindAsync(UserId);
+        if (user is null)
+        {
+            throw new UserNotFound();
+        }
+        user.FirstName = dto.FirstName;
         await context.SaveChangesAsync();
     }
     public async Task UpdateSecondNameAsync(UpdateSecondNameDto dto)
     {
-        var item = await context.Users.FindAsync(UserId);
-        item.SecondName = dto.SecondName;
+        var user = await context.Users.FindAsync(UserId);
+        if (user is null)
+        {
+            throw new UserNotFound();
+        }
+        user.SecondName = dto.SecondName;
         await context.SaveChangesAsync();
     }
     public async Task UpdatePhoneNumberAsync(UpdatePhoneNumberDto dto)
     {
-        var item = await context.Users.FindAsync(UserId);
-        item.PhoneNumber = dto.PhoneNumber;
+        var user = await context.Users.FindAsync(UserId);
+        if (user is null)
+        {
+            throw new UserNotFound();
+        }
+        user.PhoneNumber = dto.PhoneNumber;
         await context.SaveChangesAsync();
     }
     public async Task DeleteAsync()
     {
         var user = await context.Users.FindAsync(UserId);
-        context.Remove(user);
+        if (user is null)
+        {
+            throw new UserNotFound();
+        }
+        context.Users.Remove(user);
         await context.SaveChangesAsync();
     }
 }

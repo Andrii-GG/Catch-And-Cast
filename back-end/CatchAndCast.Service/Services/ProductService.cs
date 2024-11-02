@@ -3,6 +3,7 @@ using CatchAndCast.Data.Models;
 using CatchAndCast.Service.Dto.Characteristic;
 using CatchAndCast.Service.Dto.Product;
 using CatchAndCast.Service.Dto.Product.Getters;
+using CatchAndCast.Service.Exceptions;
 using CatchAndCast.Service.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,6 +20,10 @@ public class ProductService : IProductService
     public async Task DeleteAsync(int id)
     {
         var product = await context.Products.FindAsync(id);
+        if (product is null)
+        {
+            throw new ItemNotFound();
+        }
         context.Products.Remove(product);
         await context.SaveChangesAsync();
     }
@@ -36,6 +41,10 @@ public class ProductService : IProductService
     public async Task<GetProductWithCharacteristicDto> GetProductWithCharacteristicAsync(GetById dto)
     {
         var item = await context.Products.FindAsync(dto.Id);
+        if (item is null)
+        {
+            throw new ItemNotFound();
+        }
         var allCharacteristics = await context.Characteristics.Where(x => x.ProductId == dto.Id).ToListAsync();
         var selectedCharacteristic = allCharacteristics.Select(x => new GetCharacteristicDto
         {
@@ -76,6 +85,10 @@ public class ProductService : IProductService
     public async Task UpdateCategoryAsync(UpdateProductCategoryDto dto)
     {
         var product = await context.Products.FindAsync(dto.Id);
+        if (product is null)
+        {
+            throw new ItemNotFound();
+        }
         product.CategoryId = dto.CategoryId;
         await context.SaveChangesAsync();
     }
@@ -83,6 +96,10 @@ public class ProductService : IProductService
     public async Task UpdateDescroptionAsync(UpdateDescriptionDto dto)
     {
         var product = await context.Products.FindAsync(dto.Id);
+        if (product is null)
+        {
+            throw new ItemNotFound();
+        }
         product.ProductDescription = dto.Description;
         await context.SaveChangesAsync();
     }
@@ -90,6 +107,10 @@ public class ProductService : IProductService
     public async Task UpdateProductNameAsync(UpdateProductNameDto dto)
     {
         var product = await context.Products.FindAsync(dto.Id);
+        if (product is null)
+        {
+            throw new ItemNotFound();
+        }
         product.ProductName = dto.ProductName;
         await context.SaveChangesAsync();
     }
@@ -97,6 +118,10 @@ public class ProductService : IProductService
     public async Task UpdateProductNameAsync(UpdateProductPriceDto dto)
     {
         var product = await context.Products.FindAsync(dto.Id);
+        if (product is null)
+        {
+            throw new ItemNotFound();
+        }
         product.ProductPrice = dto.Price;
         await context.SaveChangesAsync();
     }

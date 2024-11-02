@@ -1,6 +1,7 @@
 ﻿using CatchAndCast.Data.Context;
 using CatchAndCast.Data.Models;
 using CatchAndCast.Service.Dto.Cart;
+using CatchAndCast.Service.Exceptions;
 using CatchAndCast.Service.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,6 +20,14 @@ public class CartService : ICartService
     public async Task Delete(int id)
     {
         var item = await context.Carts.FindAsync(id);
+        if (item is null)
+        {
+            throw new ItemNotFound();
+        }
+        if (item.UserId != currentUserService.UserId)
+        {
+            throw new NotExactUser();
+        }
         context.Carts.Remove(item);
         await context.SaveChangesAsync();
     }
@@ -42,6 +51,10 @@ public class CartService : ICartService
 
     public async Task Post(CreateCartItemDto dto)
     {
+        if(await context.Products.FindAsync() is null)
+        {
+            throw new ItemNotFound();
+        }
         var items = context.Carts.FirstOrDefault(x => x.ProductId == dto.ProductId && x.UserId == currentUserService.UserId);
         if (items is not null)
         {
@@ -63,6 +76,10 @@ public class CartService : ICartService
     public async Task Put(UpdateCartItemDto dto)
     {
         var item = await context.Carts.FindAsync(dto.CartId);
+        if (item is null)
+        {
+            throw new ItemNotFound();
+        }
         if (dto.Increment)
         {
             item.CounterProducts += 1;

@@ -35,6 +35,10 @@ public class CategoryService : ICategoryService
     public async Task UpdateAsync(UpdateCategoryDto itemDto)
     {
         var item = await context.Categories.FindAsync(itemDto.Id);
+        if (item is null)
+        {
+            throw new ItemNotFound();
+        }
         item.CategoryName = itemDto.ChangeName;
         await context.SaveChangesAsync();
     }
@@ -42,7 +46,7 @@ public class CategoryService : ICategoryService
     public async Task UpdateAsync(UpdateImageInCategoryDto itemDto)
     {
         var item = await context.Categories.FindAsync(itemDto.Id);
-        if (item == null) {
+        if (item is null) {
             throw new ItemNotFound();
         }
         item.CategoryImageUrl = itemDto.NewImageUrl;
@@ -52,6 +56,10 @@ public class CategoryService : ICategoryService
     public async Task DeleteByIdAsync(int id)
     {
         var item = await context.Categories.FindAsync(id);
+        if (item is null)
+        {
+            throw new ItemNotFound();
+        }
         context.Categories.Remove(item);
         await context.SaveChangesAsync();
     }
@@ -59,7 +67,10 @@ public class CategoryService : ICategoryService
     public async Task<Category> GetAsync(int id)
     {
         var item = await context.Categories.FindAsync(id);
-
+        if (item is null)
+        {
+            throw new ItemNotFound();
+        }
         return item;
     }
 }

@@ -1,6 +1,7 @@
 ﻿using CatchAndCast.Data.Context;
 using CatchAndCast.Data.Models;
 using CatchAndCast.Service.Dto.Favorite;
+using CatchAndCast.Service.Exceptions;
 using CatchAndCast.Service.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,6 +20,14 @@ public class FavoriteService : IFavoriteService
     public async Task Delete(int id)
     {
         var item = await context.Favorites.FindAsync(id);
+        if (item is null)
+        {
+            throw new ItemNotFound();
+        }
+        if (item.UserId != currentUser.UserId)
+        {
+            throw new NotExactUser();
+        }
         context.Favorites.Remove(item);
         await context.SaveChangesAsync();
     }
@@ -38,7 +47,7 @@ public class FavoriteService : IFavoriteService
     {
         var items = await context.Favorites.Where(x=> x.ProductId == dto.ProductId).FirstOrDefaultAsync(x=> x.UserId == currentUser.UserId);
         if (items is not null) {
-            throw new Exception("Nono");
+            throw new ItemAlreadyExist();
         }
         var item = new Favorite
         {
