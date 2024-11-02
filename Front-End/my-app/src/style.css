@@ -148,10 +148,10 @@ body {
   transition: 0.3s background-color, 0.3s box-shadow;
 }
 
-.icons-block div:hover {
+/* .icons-block div:hover {
   background-color: rgb(0, 0, 0, 0.22);
   box-shadow: 0px 0px 5px 5px rgb(0, 0, 0, 0.22);
-}
+} */
 
 .header-arrow {
   height: 25px;
@@ -405,10 +405,10 @@ body {
   transition: 0.3s background-color, 0.3s box-shadow;
 }
 
-.positionIcon-block:hover {
+/* .positionIcon-block:hover {
   background-color: rgb(0, 0, 0, 0.22);
   box-shadow: 0px 0px 5px 5px rgb(0, 0, 0, 0.22);
-}
+} */
 
 .positionIcon {
   transition: 0.3s transform;
@@ -469,11 +469,11 @@ body {
   cursor: pointer;
 }
 
-.item-heart-icon:hover,
+/* .item-heart-icon:hover,
 .item-share-icon:hover {
   background-color: rgb(0, 0, 0, 0.22);
   box-shadow: 0px 0px 5px 5px rgb(0, 0, 0, 0.22);
-}
+} */
 
 .item-heart-icon:hover img,
 .item-share-icon:hover img {
@@ -1406,8 +1406,8 @@ body {
 }
 
 .AuthorizationForm-cross:hover {
-  background-color: rgb(0, 0, 0, 0.22);
-  box-shadow: 0px 0px 5px 5px rgb(0, 0, 0, 0.22);
+  /* background-color: rgb(0, 0, 0, 0.22);
+  box-shadow: 0px 0px 5px 5px rgb(0, 0, 0, 0.22); */
   transform: scale(1.1);
 }
 

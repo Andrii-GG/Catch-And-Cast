@@ -10,12 +10,15 @@ import useFetch from "./useFetch";
 import MenuTab1 from "./MenuTab1";
 import MenuTab2 from "./MenuTab2";
 import MenuTab3 from "./MenuTab3";
+import { deleteFromFavorite } from "./deleteFromFavorite";
+import { addToFavorite } from "./addToFavorite";
 
 function ItemPage({ breadcrumbNameMap }) {
   const navigate = useNavigate();
   const { itemId } = useParams();
   const [activeTab, setActiveTab] = useState("tab1");
   const [pathnames, setPathnames] = useState([]);
+  const [isFavorite, setIsFavorite] = useState(false);
 
   const {
     data: item,
@@ -31,6 +34,39 @@ function ItemPage({ breadcrumbNameMap }) {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("http://localhost:5000/api/favorite", {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        });
+
+        if (response.ok) {
+          const result = await response.json();
+          setIsFavorite(result.some((fav) => fav.productId == itemId));
+        }
+      } catch (error) {
+        console.error("Failed to fetch favorite items:", error);
+      }
+    };
+    fetchData();
+  }, []);
+
+ 
+
+  const handleFavoriteToggle = () => {
+    if (isFavorite) {
+      setIsFavorite(false);
+      deleteFromFavorite(itemId);
+    } else {
+      setIsFavorite(true);
+      addToFavorite(itemId);
+    }
+  };
 
   if (!item) {
     return (
@@ -113,90 +149,89 @@ function ItemPage({ breadcrumbNameMap }) {
         ) : (
           ""
         )}
-        {
-          <>
-            <div className="itemPage-main">
-              <img
-                src={item?.productImageUrl}
-                alt={item?.productName}
-                className="itemPage-img"
-              ></img>
-              <span className="itemPage-title">{item?.productName}</span>
-              <span className="itemPage-date">
-                Товар додано: {new Date(item?.createdAt).toLocaleString()}
-              </span>
-              <img
-                src={`/icons/rating-${item?.rating}.svg`}
-                className="itemPage-rating-icon"
-                alt="item.productName"
-              ></img>
-              <span className="itemPage-item-amount">
-                Залишилося: {item?.countRate} од.{" "}
-              </span>
-              <span className="itemPage-price">
-                Ціна: {item?.productPrice.toLocaleString()} грн
-              </span>
-              <div className="itemPage-icons">
-                <div className="item-heart-icon">
-                  <img
-                    src={`/icons/heart-${
-                      item?.favorite ? "black-filled" : "black"
-                    }.svg`}
-                    className="icon-w-30 "
-                    alt="icons/heart"
-                  ></img>
-                </div>
-                <div className="item-share-icon">
-                  <img
-                    src="/icons/share.svg"
-                    className="icon-w-30 "
-                    onClick={shareButton}
-                    alt="icons/share"
-                  ></img>
-                </div>
+        <>
+          <div className="itemPage-main">
+            <img
+              src={item?.productImageUrl}
+              alt={item?.productName}
+              className="itemPage-img"
+            ></img>
+            <span className="itemPage-title">{item?.productName}</span>
+            <span className="itemPage-date">
+              Товар додано: {new Date(item?.createdAt).toLocaleString()}
+            </span>
+            <img
+              src={`/icons/rating-${item?.rating}.svg`}
+              className="itemPage-rating-icon"
+              alt="item.productName"
+            ></img>
+            <span className="itemPage-item-amount">
+              Залишилося: {item?.countRate} од.{" "}
+            </span>
+            <span className="itemPage-price">
+              Ціна: {item?.productPrice.toLocaleString()} грн
+            </span>
+            <div className="itemPage-icons">
+              <div className="item-heart-icon">
+                <img
+                  src={`/icons/heart-${
+                    isFavorite ? "black-filled" : "black"
+                  }.svg`}
+                  className="icon-w-30 "
+                  alt="icons/heart"
+                  onClick={handleFavoriteToggle}
+                ></img>
               </div>
-              <div className="itemPage-buttonBlock">
-                <button className="itemPage-buyButton">
-                  <img src="icons/bag.svg" alt="heart" />
-                  <span>Купити</span>
-                </button>
-                <button className="itemPage-cartButton">
-                  <img src="icons/cart-black.svg" alt="bin" />
-                  <span>У кошик</span>
-                </button>
+              <div className="item-share-icon">
+                <img
+                  src="/icons/share.svg"
+                  className="icon-w-30 "
+                  onClick={shareButton}
+                  alt="icons/share"
+                ></img>
               </div>
             </div>
-            <div className="itemPage-info">
-              <span className="itemPage-horizontal"></span>
-              <ul className="itemPage-menu">
-                <li
-                  className={activeTab === "tab1" ? "active-tab" : ""}
-                  onClick={() => setActiveTab("tab1")}
-                >
-                  Опис
-                </li>
-                <li
-                  className={activeTab === "tab2" ? "active-tab" : ""}
-                  onClick={() => setActiveTab("tab2")}
-                >
-                  Характеристики
-                </li>
-                <li
-                  className={activeTab === "tab3" ? "active-tab" : ""}
-                  onClick={() => setActiveTab("tab3")}
-                >
-                  Відгуки
-                </li>
-              </ul>
-              <span className="itemPage-horizontal"></span>
-              <div className="itemPage-menu-info">
-                {activeTab === "tab1" && <MenuTab1 item={item}></MenuTab1>}
-                {activeTab === "tab2" && <MenuTab2 item={item}></MenuTab2>}
-                {activeTab === "tab3" && <MenuTab3 item={item}></MenuTab3>}
-              </div>
+            <div className="itemPage-buttonBlock">
+              <button className="itemPage-buyButton">
+                <img src="icons/bag.svg" alt="heart" />
+                <span>Купити</span>
+              </button>
+              <button className="itemPage-cartButton">
+                <img src="icons/cart-black.svg" alt="bin" />
+                <span>У кошик</span>
+              </button>
             </div>
-          </>
-        }
+          </div>
+          <div className="itemPage-info">
+            <span className="itemPage-horizontal"></span>
+            <ul className="itemPage-menu">
+              <li
+                className={activeTab === "tab1" ? "active-tab" : ""}
+                onClick={() => setActiveTab("tab1")}
+              >
+                Опис
+              </li>
+              <li
+                className={activeTab === "tab2" ? "active-tab" : ""}
+                onClick={() => setActiveTab("tab2")}
+              >
+                Характеристики
+              </li>
+              <li
+                className={activeTab === "tab3" ? "active-tab" : ""}
+                onClick={() => setActiveTab("tab3")}
+              >
+                Відгуки
+              </li>
+            </ul>
+            <span className="itemPage-horizontal"></span>
+            <div className="itemPage-menu-info">
+              {activeTab === "tab1" && <MenuTab1 item={item}></MenuTab1>}
+              {activeTab === "tab2" && <MenuTab2 item={item}></MenuTab2>}
+              {activeTab === "tab3" && <MenuTab3 item={item}></MenuTab3>}
+            </div>
+          </div>
+        </>
       </section>
       <span className="share-notice">Посилання на товар скопійоване!</span>
     </div>

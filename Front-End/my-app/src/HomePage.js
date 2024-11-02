@@ -4,6 +4,8 @@ import Position from "./Position";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import useFetch from "./useFetch";
+import { deleteFromFavorite } from "./deleteFromFavorite";
+import { addToFavorite } from "./addToFavorite";
 
 function HomePage() {
   const [isPositionOpen, setIsPositionOpen] = useState(false);
@@ -15,10 +17,45 @@ function HomePage() {
     error,
   } = useFetch("http://localhost:5000/api/product");
   const { data: category } = useFetch("http://localhost:5000/api/category");
+  const [favoriteItems, setFavoriteItems] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("http://localhost:5000/api/favorite", {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        });
+
+        if (response.ok) {
+          const result = await response.json();
+          const favoriteId = result.map((fav) => fav.productId);
+          setFavoriteItems(favoriteId);
+        }
+      } catch (error) {
+        console.error("Failed to fetch favorite items:", error);
+      }
+    };
+    fetchData();
+  }, []);
 
   function openPositionModal() {
     setIsPositionOpen(true);
   }
+
+  const handleFavoriteToggle = (id, isFavorite) => {
+    if (isFavorite) {
+      setFavoriteItems((prevFavorites) =>
+        prevFavorites.filter((favId) => favId !== id)
+      );
+      deleteFromFavorite(id);
+    } else {
+      setFavoriteItems((prevFavorites) => [...prevFavorites, id]);
+      addToFavorite(id);
+    }
+  };
 
   useEffect(() => {
     const path = [window.location.pathname];
@@ -145,6 +182,9 @@ function HomePage() {
         )}
         {items
           ? items.map((item) => {
+              const isFavorite = favoriteItems.some(
+                (favId) => favId === item.id
+              );
               const findCategory =
                 category && category.find((cat) => cat.id === item.categoryId);
               return (
@@ -163,9 +203,12 @@ function HomePage() {
                       <img
                         src={`/icons/heart-${
                           // item.favorite
-                          false ? "black-filled" : "black"
+                          isFavorite ? "black-filled" : "black"
                         }.svg`}
                         className="icon-w-30 "
+                        onClick={() =>
+                          handleFavoriteToggle(item.id, isFavorite)
+                        }
                       ></img>
                     </div>
                     <div className="item-share-icon">
