@@ -1,9 +1,12 @@
 using CatchAndCast.Api.Middlewares;
 using CatchAndCast.Api.Service;
+using CatchAndCast.Api.Validators;
 using CatchAndCast.Data.Context;
 using CatchAndCast.Data.Models;
 using CatchAndCast.Service.Interfaces;
 using CatchAndCast.Service.Services;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
@@ -22,6 +25,13 @@ builder.Services.AddCors(options =>
 
 
 builder.Services.AddControllers();
+builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddValidatorsFromAssemblyContaining<CreateCategoryWithImageValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<CreateCharacteristicValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<CreateProductWithCategoryIdValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<CreateReviewValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<RegisterUserValidator>();
+
 //builder.Services.AddControllers()
 //    .AddJsonOptions(options =>
 //    {
