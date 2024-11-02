@@ -16,10 +16,6 @@ function HomePage() {
   } = useFetch("http://localhost:5000/api/product");
   const { data: category } = useFetch("http://localhost:5000/api/category");
 
-  useEffect(() => {
-    localStorage.setItem("position", "Київ");
-  }, []);
-
   function openPositionModal() {
     setIsPositionOpen(true);
   }
@@ -137,68 +133,78 @@ function HomePage() {
         </ul>
       </nav>
       <section className="items-container">
-        {loading ? <p>Завантаження...</p> : ""}
-        {error ? <p>Error: {error}</p> : ""}
+        {loading ? (
+          <p style={{ margin: "0px 0px 32px 0px" }}>Завантаження...</p>
+        ) : (
+          ""
+        )}
+        {error ? (
+          <p style={{ margin: "0px 0px 32px 0px" }}>Помилка: {error}</p>
+        ) : (
+          ""
+        )}
         {items
           ? items.map((item) => {
-               const findCategory = category && category.find(
-                (cat) => cat.id === item.categoryId
-              );
-              return (catalog === "Популярні товари" || catalog === findCategory.categoryName) && (
-                <div className="item-block" key={item.id} id={item.id}>
-                  <img
-                    alt={item.productName}
-                    src={item.productImageUrl}
-                    className="item-img"
-                    onClick={() => {
-                      goToItem(item);
-                    }}
-                  ></img>
-                  <div className="item-heart-icon">
+              const findCategory =
+                category && category.find((cat) => cat.id === item.categoryId);
+              return (
+                (catalog === "Популярні товари" ||
+                  catalog === findCategory.categoryName) && (
+                  <div className="item-block" key={item.id} id={item.id}>
                     <img
-                      src={`/icons/heart-${
-                        // item.favorite
-                        false ? "black-filled" : "black"
-                      }.svg`}
-                      className="icon-w-30 "
+                      alt={item.productName}
+                      src={item.productImageUrl}
+                      className="item-img"
+                      onClick={() => {
+                        goToItem(item);
+                      }}
                     ></img>
+                    <div className="item-heart-icon">
+                      <img
+                        src={`/icons/heart-${
+                          // item.favorite
+                          false ? "black-filled" : "black"
+                        }.svg`}
+                        className="icon-w-30 "
+                      ></img>
+                    </div>
+                    <div className="item-share-icon">
+                      <img
+                        src="/icons/share.svg"
+                        className="icon-w-30 "
+                        onClick={shareButton}
+                      ></img>
+                    </div>
+                    <span
+                      className="item-title"
+                      onClick={() => {
+                        goToItem(item);
+                      }}
+                    >
+                      {item.productName}
+                    </span>
+                    <span className="item-description">
+                      {item.productDescription} <br></br>
+                      <img
+                        src={`/icons/rating-${item.rating}.svg`}
+                        className="item-rating-icon"
+                      ></img>
+                    </span>
+                    <span className="item-price">
+                      {item.productPrice.toLocaleString()} грн
+                    </span>
+                    <span className="item-vertical"></span>
+                    <span className="item-horizontal"></span>
+                    <button className="buy-button">
+                      <img src="icons/bag.svg"></img>
+                      <span>Купити</span>
+                    </button>
+                    <button className="cart-button">
+                      <img src="icons/cart-black.svg"></img>
+                      <span>У корзину</span>
+                    </button>
                   </div>
-                  <div className="item-share-icon">
-                    <img
-                      src="/icons/share.svg"
-                      className="icon-w-30 "
-                      onClick={shareButton}
-                    ></img>
-                  </div>
-                  <span
-                    className="item-title"
-                    onClick={() => {
-                      goToItem(item);
-                    }}
-                  >
-                    {item.productName}
-                  </span>
-                  <span className="item-description">
-                    {item.productDescription} <br></br>
-                    <img
-                      src={`/icons/rating-${item.rating}.svg`}
-                      className="item-rating-icon"
-                    ></img>
-                  </span>
-                  <span className="item-price">
-                    {item.productPrice.toLocaleString()} грн
-                  </span>
-                  <span className="item-vertical"></span>
-                  <span className="item-horizontal"></span>
-                  <button className="buy-button">
-                    <img src="icons/bag.svg"></img>
-                    <span>Купити</span>
-                  </button>
-                  <button className="cart-button">
-                    <img src="icons/cart-black.svg"></img>
-                    <span>У корзину</span>
-                  </button>
-                </div>
+                )
               );
             })
           : null}

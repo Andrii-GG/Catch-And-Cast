@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import Dropdown from "./Dropdown";
 
-function Header() {
+function Header({ setIsAuthPage }) {
   const navigate = useNavigate();
   const location = useLocation();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -16,7 +16,8 @@ function Header() {
   }
 
   useEffect(() => {
-    localStorage.setItem("position", "Київ");
+    
+
     const inputGroup = document.querySelector(".header-input-group");
 
     if (location.pathname === "/") {
@@ -46,10 +47,50 @@ function Header() {
       window.addEventListener("scroll", handleScroll);
 
       return () => {
-        window.removeEventListener("scroll", handleScroll); // очищення слухача при демонтуванні
+        window.removeEventListener("scroll", handleScroll); 
       };
     }
   }, [location]);
+
+  useEffect(() => {
+    if (!localStorage.getItem("position"))
+      localStorage.setItem("position", "Київ"); //встановлення розташування за замовчуванням
+
+    const fetchData = async () => { //оновлення токена
+      try {
+        const response = await fetch("http://localhost:5000/refresh", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            refreshToken: localStorage.getItem("refreshToken"),
+          }),
+        });
+
+        if (response.ok) {
+          const result = await response.json();
+          console.log("Success:", result);
+          localStorage.setItem("accessToken", result.accessToken);
+          localStorage.setItem("refreshToken", result.refreshToken);
+        } else {
+          const errorData = await response.json();
+          console.error(
+            "Error:",
+            response.statusText,
+            errorData.message || errorData
+          );
+        }
+      } catch (error) {
+        console.error("Failed to fetch data:", error);
+      }
+    };
+    if (localStorage.getItem("refreshToken")) {
+      fetchData();
+      const intervalId = setInterval(fetchData, 1000000);
+      return () => clearInterval(intervalId);
+    }
+  }, []);
 
   const handleScroll = () => {
     const position = window.scrollY;
@@ -58,7 +99,7 @@ function Header() {
       .getBoundingClientRect();
     const inputGroup = document.querySelector(".header-input-group");
     const inputGroupWidth = window.getComputedStyle(inputGroup).width;
-    
+
     if (
       position - 140 >= inputPosition.top &&
       inputGroup.style.position == "absolute"
@@ -115,7 +156,9 @@ function Header() {
             alt="likes"
             className="header-likes"
             onClick={() => {
-              navigate("/favorite");
+              localStorage.getItem("accessToken")
+                ? navigate("/favorite")
+                : navigate("/authorization");
             }}
           ></img>
         </div>
@@ -125,7 +168,9 @@ function Header() {
             alt="cart"
             className="header-cart"
             onClick={() => {
-              navigate("/cart");
+              localStorage.getItem("accessToken")
+                ? navigate("/cart")
+                : navigate("/authorization");
             }}
           ></img>
         </div>
@@ -134,6 +179,11 @@ function Header() {
             src="/icons/profile.svg"
             alt="profile"
             className="header-profile"
+            onClick={() => {
+              localStorage.getItem("accessToken")
+                ? alert("Марта зроби сторінку профілю")
+                : navigate("/authorization");
+            }}
           ></img>
         </div>
       </div>

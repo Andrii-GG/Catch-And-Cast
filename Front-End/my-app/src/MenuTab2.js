@@ -5,15 +5,18 @@ const MenuTab2 = ({ item }) => {
   return (
     <div className="menuTab">
       <div className="menuTab2-list">
-        {Object.entries(item.characteristics).map(([key, value]) => {
-          return (
-            <>
-              {" "}
-              <span>{value[0]}</span>
-              <span>{value[1]}</span>
-            </>
-          );
-        })}
+        {item.productCharacteristics?.length ? (
+          item.productCharacteristics.map(
+            ({ nameOfCharacteristic, descriptionOfCharacteristic }, index) => (
+              <React.Fragment key={index}>
+                <span>{nameOfCharacteristic}</span>
+                <span>{descriptionOfCharacteristic}</span>
+              </React.Fragment>
+            )
+          )
+        ) : (
+          <span>Пусто</span>
+        )}
       </div>
     </div>
   );

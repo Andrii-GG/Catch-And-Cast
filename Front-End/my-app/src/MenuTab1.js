@@ -5,7 +5,7 @@ import ReactDOM from "react-dom";
 const MenuTab1 = ({ item }) => {
   return (
     <div className="menuTab">
-      {item.description}
+      {item?.productDescription ?  item.productDescription : "Пусто"}
     </div>
   );
 };

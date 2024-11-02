@@ -24,7 +24,7 @@ const Dropdown = ({ isOpen, setOpen, setFilter }) => {
     dropdownMenu.style.width = window.getComputedStyle(
       document.querySelector(".header-category")
     ).width;
-    debugger;
+    
     let inputPosition = document.querySelector(".home-inputPosition");
     if (inputPosition) {
       inputPosition = inputPosition.getBoundingClientRect();
