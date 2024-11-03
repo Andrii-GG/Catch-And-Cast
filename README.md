@@ -83,4 +83,4 @@ yarn start
 
   
 
-**UI/UX designer** - martatut
+**UI/UX designer** - Cherryiwi
