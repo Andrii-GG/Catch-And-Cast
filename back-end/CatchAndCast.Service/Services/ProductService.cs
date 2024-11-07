@@ -33,10 +33,54 @@ public class ProductService : IProductService
         return await context.Products.ToListAsync();
     }
 
+    public async Task<IEnumerable<GetProductDto>> GetProduct(FilterProduct dto)
+    {
+        if (dto.CategoryId is null)
+        {
+            var items = await context.Products.Where(x => x.ProductName.Contains(dto.FilterString)).ToListAsync();
+            var finishItems = items.Select(x => new GetProductDto
+            {
+                Id = x.Id,
+                CategoryId = x.CategoryId,
+                AmountOfProduct = x.AmountOfProduct,
+                CountRate = x.CountRate,
+                CreatedAt = x.CreatedAt,
+                ProductDescription = x.ProductDescription,
+                ProductName = x.ProductName,
+                ProductImageUrl = x.ProductImageUrl,
+                ProductPrice = x.ProductPrice,
+                Rating = x.Rating
+            });
+
+            return finishItems;
+        }
+        if (await context.Categories.FindAsync(dto.CategoryId) is null)
+        {
+            throw new ItemNotFound();
+        }
+        var itemsWithId = await context.Products.Where(x => x.CategoryId == dto.CategoryId && x.ProductName.Contains(dto.FilterString)).ToListAsync();
+        var finish = itemsWithId.Select(x => new GetProductDto {
+         Id = x.Id,
+         CategoryId = x.CategoryId,
+         AmountOfProduct = x.AmountOfProduct,
+         CountRate = x.CountRate,
+         CreatedAt = x.CreatedAt,
+         ProductDescription = x.ProductDescription,
+         ProductName = x.ProductName,
+         ProductImageUrl = x.ProductImageUrl,
+         ProductPrice = x.ProductPrice,
+         Rating = x.Rating
+        });
+
+        return finish;
+    }
+
     public async Task<IEnumerable<Product>> GetProductsByCategoryAsync(GetByCategory dto)
     {
         return await context.Products.Where(x => x.CategoryId == dto.CategoryId).ToListAsync();
     }
+
+
 
     public async Task<GetProductWithCharacteristicDto> GetProductWithCharacteristicAsync(GetById dto)
     {
@@ -127,4 +171,6 @@ public class ProductService : IProductService
         product.ProductPrice = dto.Price;
         await context.SaveChangesAsync();
     }
+
+  
 }

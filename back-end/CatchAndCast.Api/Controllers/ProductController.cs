@@ -40,6 +40,12 @@ namespace CatchAndCast.Api.Controllers
             var items = await productService.GetProductsByCategoryAsync(dto);
             return Ok(items);
         }
+        [HttpGet("filter")]
+        public async Task<ActionResult<GetProductDto>> Get([FromQuery] FilterProduct dto)
+        {
+            var items = await productService.GetProduct(dto);
+            return Ok(items);
+        }
 
         [HttpPost]
         public async Task<ActionResult> Post(CreateProductWithCategoryIdDto dto)
