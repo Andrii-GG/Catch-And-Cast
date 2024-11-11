@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import Dropdown from "./Dropdown";
+import { ApiUrl } from "./apiUrl";
 
 function Header({ setIsAuthPage }) {
   const navigate = useNavigate();
@@ -58,7 +59,7 @@ function Header({ setIsAuthPage }) {
 
     const fetchData = async () => { //оновлення токена
       try {
-        const response = await fetch("http://localhost:5000/refresh", {
+        const response = await fetch(`${ApiUrl}/refresh`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

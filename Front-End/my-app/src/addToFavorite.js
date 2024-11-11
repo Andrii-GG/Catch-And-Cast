@@ -1,7 +1,8 @@
+import { ApiUrl } from "./apiUrl";
 export const addToFavorite = (id) => {
   const fetchData = async () => {
     try {
-      await fetch(`http://localhost:5000/api/favorite`, {
+      await fetch(`${ApiUrl}/api/favorite`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

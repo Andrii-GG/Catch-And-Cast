@@ -1,7 +1,9 @@
+import { ApiUrl } from "./apiUrl"
+
 export const deleteFromFavorite = (id) => {
   const fetchData = async () => {
     try {
-      fetch(`http://localhost:5000/api/favorite/product-id`, {
+      fetch(`${ApiUrl}/api/favorite/product-id`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",

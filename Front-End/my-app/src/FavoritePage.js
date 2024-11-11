@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { deleteFromFavorite } from "./deleteFromFavorite";
+import { ApiUrl } from "./apiUrl";
 
 let items = [
   {
@@ -45,7 +46,7 @@ function FavoritePage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/favorite", {
+        const response = await fetch(`${ApiUrl}/api/favorite`, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${localStorage.getItem("accessToken")}`,

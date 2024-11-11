@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import ReactDOM from "react-dom";
 import useFetch from "./useFetch";
+import { ApiUrl } from "./apiUrl";
 
 const Dropdown = ({ isOpen, setOpen, setFilter }) => {
-  const { data: category } = useFetch("http://localhost:5000/api/category");
+  const { data: category } = useFetch(`${ApiUrl}/api/category`);
 
   useEffect(() => {
     const dropdownMenu = document.querySelector(".dropdown-wall");

@@ -6,6 +6,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import useFetch from "./useFetch";
 import { deleteFromFavorite } from "./deleteFromFavorite";
 import { addToFavorite } from "./addToFavorite";
+import { ApiUrl } from "./apiUrl";
 
 function HomePage() {
   const [isPositionOpen, setIsPositionOpen] = useState(false);
@@ -15,14 +16,14 @@ function HomePage() {
     data: items,
     loading,
     error,
-  } = useFetch("http://localhost:5000/api/product");
-  const { data: category } = useFetch("http://localhost:5000/api/category");
+  } = useFetch(`${ApiUrl}/api/product`);
+  const { data: category } = useFetch(`${ApiUrl}/api/category`);
   const [favoriteItems, setFavoriteItems] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/favorite", {
+        const response = await fetch(`${ApiUrl}/api/favorite`, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${localStorage.getItem("accessToken")}`,

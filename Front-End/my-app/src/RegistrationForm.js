@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { ApiUrl } from "./apiUrl";
 
 const RegistrationForm = () => {
   const navigate = useNavigate();
@@ -65,7 +66,7 @@ const RegistrationForm = () => {
     formData.forEach((value, key) => (formObject[key] = value));
 
     try {
-      const response = await fetch("http://localhost:5000/api/user/register", {
+      const response = await fetch(`${ApiUrl}/api/user/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -75,7 +76,7 @@ const RegistrationForm = () => {
 
       if (response.ok) {
         try {
-          const responseAuth = await fetch("http://localhost:5000/login", {
+          const responseAuth = await fetch(`${ApiUrl}/login`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",

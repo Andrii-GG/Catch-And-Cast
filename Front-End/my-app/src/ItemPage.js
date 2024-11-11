@@ -12,6 +12,7 @@ import MenuTab2 from "./MenuTab2";
 import MenuTab3 from "./MenuTab3";
 import { deleteFromFavorite } from "./deleteFromFavorite";
 import { addToFavorite } from "./addToFavorite";
+import { ApiUrl } from "./apiUrl";
 
 function ItemPage({ breadcrumbNameMap }) {
   const navigate = useNavigate();
@@ -24,7 +25,7 @@ function ItemPage({ breadcrumbNameMap }) {
     data: item,
     loading,
     error,
-  } = useFetch(`http://localhost:5000/api/product/${itemId}`);
+  } = useFetch(`${ApiUrl}/api/product/${itemId}`);
 
   useEffect(() => {
     const history = JSON.parse(localStorage.getItem("history")) || [];
@@ -38,7 +39,7 @@ function ItemPage({ breadcrumbNameMap }) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/favorite", {
+        const response = await fetch(`${ApiUrl}/api/favorite`, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${localStorage.getItem("accessToken")}`,

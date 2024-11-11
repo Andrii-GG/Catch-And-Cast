@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { ApiUrl } from "./apiUrl";
 
 const AuthorizationForm = () => {
   const navigate = useNavigate();
@@ -45,7 +46,7 @@ const AuthorizationForm = () => {
     }
 
     try {
-      const response = await fetch("http://localhost:5000/login", {
+      const response = await fetch(`${ApiUrl}/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
