@@ -2,12 +2,28 @@ import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import Dropdown from "./Dropdown";
 import { ApiUrl } from "./apiUrl";
+import useFetch from "./useFetch";
 
 function Header({ setIsAuthPage }) {
   const navigate = useNavigate();
   const location = useLocation();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [filter, setFilter] = useState("Всі товари");
+
+  const { data: cart, error } = useFetch(`${ApiUrl}/api/cart`, {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+    },
+  });
+
+  useEffect(() => {
+    let count = cart?.reduce((count, item) => count + item.counterProducts, 0);
+    const cartIcon = document.querySelector(".cart-icon");
+    if (cartIcon) {
+      cartIcon.setAttribute("data-count", count > 0 ? count : "");
+    }
+  });
 
   function handleClick() {
     setIsDropdownOpen(!isDropdownOpen);
@@ -17,8 +33,6 @@ function Header({ setIsAuthPage }) {
   }
 
   useEffect(() => {
-    
-
     const inputGroup = document.querySelector(".header-input-group");
 
     if (location.pathname === "/") {
@@ -48,7 +62,7 @@ function Header({ setIsAuthPage }) {
       window.addEventListener("scroll", handleScroll);
 
       return () => {
-        window.removeEventListener("scroll", handleScroll); 
+        window.removeEventListener("scroll", handleScroll);
       };
     }
   }, [location]);
@@ -57,7 +71,8 @@ function Header({ setIsAuthPage }) {
     if (!localStorage.getItem("position"))
       localStorage.setItem("position", "Київ"); //встановлення розташування за замовчуванням
 
-    const fetchData = async () => { //оновлення токена
+    const fetchData = async () => {
+      //оновлення токена
       try {
         const response = await fetch(`${ApiUrl}/refresh`, {
           method: "POST",
@@ -163,7 +178,7 @@ function Header({ setIsAuthPage }) {
             }}
           ></img>
         </div>
-        <div>
+        <div className="cart-icon">
           <img
             src="/icons/cart.svg"
             alt="cart"

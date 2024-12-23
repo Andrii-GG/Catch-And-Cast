@@ -3,33 +3,6 @@ import { useNavigate, Link } from "react-router-dom";
 import { deleteFromFavorite } from "./deleteFromFavorite";
 import { ApiUrl } from "./apiUrl";
 
-let items = [
-  {
-    id: 121212,
-    name: "Вудка крута",
-    price: 23999,
-    rating: 5,
-    descriptionShort: "Ловить рибу. ",
-    description:
-      "Ловить рибу. можна сісти на неї і полетіти в космос. Матеріал: залізо з венери та павутина павука.",
-    imageUrl: "/example.png",
-    favorite: true,
-    amount: 2,
-  },
-  {
-    id: 3223232,
-    name: "Вудка не дуже",
-    price: 599,
-    rating: 1,
-    descriptionShort: "Не ловить рибу. ",
-    description:
-      "Не ловить рибу. можна гнати корову. Матеріал: дуб і нитка проста.",
-    imageUrl: "/example.png",
-    favorite: false,
-    amount: 1,
-  },
-];
-
 function FavoritePage() {
   const navigate = useNavigate();
   const [favoriteItems, setFavoriteItems] = useState([]);
@@ -55,12 +28,11 @@ function FavoritePage() {
 
         if (response.ok) {
           const result = await response.json();
-
           const favoriteItemsArray = await Promise.all(
             result.map(async (fav) => {
               try {
                 const responseItem = await fetch(
-                  `http://localhost:5000/api/product/${fav.productId}`
+                  `${ApiUrl}/api/product/${fav.productId}`
                 );
                 if (responseItem.ok) {
                   const productDetail = await responseItem.json();
@@ -96,7 +68,7 @@ function FavoritePage() {
     setFavoriteItems((prevFavorites) =>
       prevFavorites.filter((fav) => fav.id !== id)
     );
-    deleteFromFavorite(id);    
+    deleteFromFavorite(id);
   };
 
   return (

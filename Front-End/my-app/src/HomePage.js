@@ -6,19 +6,44 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import useFetch from "./useFetch";
 import { deleteFromFavorite } from "./deleteFromFavorite";
 import { addToFavorite } from "./addToFavorite";
+import { addToCart } from "./addToCart";
 import { ApiUrl } from "./apiUrl";
 
 function HomePage() {
+  const navigate = useNavigate();
   const [isPositionOpen, setIsPositionOpen] = useState(false);
   const [catalog, setCatalog] = useState("Популярні товари");
-  const navigate = useNavigate();
-  const {
-    data: items,
-    loading,
-    error,
-  } = useFetch(`${ApiUrl}/api/product`);
+
   const { data: category } = useFetch(`${ApiUrl}/api/category`);
   const [favoriteItems, setFavoriteItems] = useState([]);
+
+  const [items, setItems] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const fetchData = async (url, options = {}) => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const response = await fetch(url, options);
+
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`);
+      }
+
+      const result = await response.json();
+      setItems(result);
+      console.log(result);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
+    fetchData(`${ApiUrl}/api/product`);
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -47,6 +72,10 @@ function HomePage() {
   }
 
   const handleFavoriteToggle = (id, isFavorite) => {
+    if (!localStorage.getItem("accessToken")) {
+      navigate("/authorization");
+      return;
+    }
     if (isFavorite) {
       setFavoriteItems((prevFavorites) =>
         prevFavorites.filter((favId) => favId !== id)
@@ -56,6 +85,14 @@ function HomePage() {
       setFavoriteItems((prevFavorites) => [...prevFavorites, id]);
       addToFavorite(id);
     }
+  };
+
+  const handleAddToCart = (id) => {
+    if (!localStorage.getItem("accessToken")) {
+      navigate("/authorization");
+      return;
+    }
+    addToCart(id);
   };
 
   useEffect(() => {
@@ -119,6 +156,7 @@ function HomePage() {
           <span
             onClick={() => {
               setCatalog("Популярні товари");
+              fetchData(`${ApiUrl}/api/product`);
             }}
           >
             Каталог
@@ -134,20 +172,23 @@ function HomePage() {
         <div className="catalog-items">
           <ul>
             {category
-              ? category.map((item) => {
+              ? category.map((category) => {
                   return (
                     <li
                       className="category-item"
-                      key={item.categoryName}
+                      key={category.categoryName}
                       onClick={() => {
-                        setCatalog(item.categoryName);
+                        setCatalog(category.categoryName);
+                        fetchData(
+                          `${ApiUrl}/api/product/category-id?CategoryId=${category.id}`
+                        );
                       }}
                     >
                       <img
-                        src={item.categoryImageUrl}
-                        alt={item.categoryName}
+                        src={category.categoryImageUrl}
+                        alt={category.categoryName}
                       ></img>
-                      <span> {item.categoryName}</span>
+                      <span> {category.categoryName}</span>
                     </li>
                   );
                 })
@@ -181,77 +222,75 @@ function HomePage() {
         ) : (
           ""
         )}
-        {items
-          ? items.map((item) => {
-              const isFavorite = favoriteItems.some(
-                (favId) => favId === item.id
-              );
-              const findCategory =
-                category && category.find((cat) => cat.id === item.categoryId);
-              return (
-                (catalog === "Популярні товари" ||
-                  catalog === findCategory.categoryName) && (
-                  <div className="item-block" key={item.id} id={item.id}>
-                    <img
-                      alt={item.productName}
-                      src={item.productImageUrl}
-                      className="item-img"
-                      onClick={() => {
-                        goToItem(item);
-                      }}
-                    ></img>
-                    <div className="item-heart-icon">
-                      <img
-                        src={`/icons/heart-${
-                          // item.favorite
-                          isFavorite ? "black-filled" : "black"
-                        }.svg`}
-                        className="icon-w-30 "
-                        onClick={() =>
-                          handleFavoriteToggle(item.id, isFavorite)
-                        }
-                      ></img>
-                    </div>
-                    <div className="item-share-icon">
-                      <img
-                        src="/icons/share.svg"
-                        className="icon-w-30 "
-                        onClick={shareButton}
-                      ></img>
-                    </div>
-                    <span
-                      className="item-title"
-                      onClick={() => {
-                        goToItem(item);
-                      }}
-                    >
-                      {item.productName}
-                    </span>
-                    <span className="item-description">
-                      {item.productDescription} <br></br>
-                      <img
-                        src={`/icons/rating-${item.rating}.svg`}
-                        className="item-rating-icon"
-                      ></img>
-                    </span>
-                    <span className="item-price">
-                      {item.productPrice.toLocaleString()} грн
-                    </span>
-                    <span className="item-vertical"></span>
-                    <span className="item-horizontal"></span>
-                    <button className="buy-button">
-                      <img src="icons/bag.svg"></img>
-                      <span>Купити</span>
-                    </button>
-                    <button className="cart-button">
-                      <img src="icons/cart-black.svg"></img>
-                      <span>У корзину</span>
-                    </button>
-                  </div>
-                )
-              );
-            })
-          : null}
+        {items && items.length > 0 ? (
+          items.map((item) => {
+            const isFavorite = favoriteItems.some((favId) => favId === item.id);
+            return (
+              <div className="item-block" key={item.id} id={item.id}>
+                <img
+                  alt={item.productName}
+                  src={item.productImageUrl}
+                  className="item-img"
+                  onClick={() => {
+                    goToItem(item);
+                  }}
+                ></img>
+                <div className="item-heart-icon">
+                  <img
+                    src={`/icons/heart-${
+                      // item.favorite
+                      isFavorite ? "black-filled" : "black"
+                    }.svg`}
+                    className="icon-w-30 "
+                    onClick={() => handleFavoriteToggle(item.id, isFavorite)}
+                  ></img>
+                </div>
+                <div className="item-share-icon">
+                  <img
+                    src="/icons/share.svg"
+                    className="icon-w-30 "
+                    onClick={shareButton}
+                  ></img>
+                </div>
+                <span
+                  className="item-title"
+                  onClick={() => {
+                    goToItem(item);
+                  }}
+                >
+                  {item.productName}
+                </span>
+                <span className="item-description">
+                  {item.productDescription} <br></br>
+                  <img
+                    src={`/icons/rating-${item.rating}.svg`}
+                    className="item-rating-icon"
+                  ></img>
+                </span>
+                <span className="item-price">
+                  {item.productPrice.toLocaleString()} грн
+                </span>
+                <span className="item-vertical"></span>
+                <span className="item-horizontal"></span>
+                <button className="buy-button">
+                  <img src="icons/bag.svg"></img>
+                  <span>Купити</span>
+                </button>
+                <button
+                  className="cart-button"
+                  onClick={() => handleAddToCart(item.id)}
+                >
+                  <img src="icons/cart-black.svg"></img>
+                  <span>У корзину</span>
+                </button>
+              </div>
+            );
+          })
+        ) : (
+          <p style={{ margin: "0px 0px 32px", justifySelf: "center" }}>
+            Товарів не знайдено
+          </p>
+        )}
       </section>
       <Position isOpen={isPositionOpen} setOpen={setIsPositionOpen}></Position>
       <span className="share-notice">Посилання на товар скопійоване!</span>
