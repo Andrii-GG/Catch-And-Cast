@@ -1,8 +1,10 @@
 ﻿using CatchAndCast.Data.Models;
 using CatchAndCast.Service.Dto.Cart;
+using CatchAndCast.Service.Exceptions;
 using CatchAndCast.Service.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
 namespace CatchAndCast.Api.Controllers
 {
@@ -24,8 +26,8 @@ namespace CatchAndCast.Api.Controllers
         [HttpGet("all")]
         public async Task<ActionResult<IEnumerable<Cart>>> GetAll()
         {
-            var items = await context.GetAll();
-            return Ok(items);
+                var items = await context.GetAll();
+                return Ok(items);
         }
         [HttpPost]
         public async Task<ActionResult> Post(CreateCartItemDto dto)

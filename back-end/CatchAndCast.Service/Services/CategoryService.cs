@@ -12,9 +12,12 @@ namespace CatchAndCast.Service.Services;
 public class CategoryService : ICategoryService
 {
     private readonly CatchAndCastContext context;
-    public CategoryService(CatchAndCastContext _context)
+    private readonly ICurrentUserService currentUserService;
+
+    public CategoryService(CatchAndCastContext _context, ICurrentUserService _currentUserService)
     {
         context = _context;
+        currentUserService = _currentUserService;
     }
 
     public async Task<List<Category>> GetAsync()
@@ -23,6 +26,10 @@ public class CategoryService : ICategoryService
     }
     public async Task CreateAsync(CreateCategoryWithImageDto itemDto)
     {
+        if (currentUserService.UserRole != Data.Enums.UserRoles.Admin)
+        {
+            throw new ClosedAction();
+        }
         var category = new Category
         {
             CategoryName = itemDto.CategoryName,
@@ -35,6 +42,10 @@ public class CategoryService : ICategoryService
     public async Task UpdateAsync(UpdateCategoryDto itemDto)
     {
         var item = await context.Categories.FindAsync(itemDto.Id);
+        if (currentUserService.UserRole != Data.Enums.UserRoles.Admin)
+        {
+            throw new ClosedAction();
+        }
         if (item is null)
         {
             throw new ItemNotFound();
@@ -46,6 +57,10 @@ public class CategoryService : ICategoryService
     public async Task UpdateAsync(UpdateImageInCategoryDto itemDto)
     {
         var item = await context.Categories.FindAsync(itemDto.Id);
+        if (currentUserService.UserRole != Data.Enums.UserRoles.Admin)
+        {
+            throw new ClosedAction();
+        }
         if (item is null) {
             throw new ItemNotFound();
         }
@@ -55,6 +70,10 @@ public class CategoryService : ICategoryService
 
     public async Task DeleteByIdAsync(int id)
     {
+        if (currentUserService.UserRole != Data.Enums.UserRoles.Admin)
+        {
+            throw new ClosedAction();
+        }
         var item = await context.Categories.FindAsync(id);
         if (item is null)
         {

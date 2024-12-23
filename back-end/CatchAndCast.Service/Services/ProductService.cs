@@ -12,13 +12,19 @@ namespace CatchAndCast.Service.Services;
 public class ProductService : IProductService
 {
     private readonly CatchAndCastContext context;
-    public ProductService(CatchAndCastContext _context)
+    private readonly ICurrentUserService currentUserService;
+    public ProductService(CatchAndCastContext _context, ICurrentUserService _currentUserService)
     {
         context = _context;
+        currentUserService = _currentUserService;
     }
 
     public async Task DeleteAsync(int id)
     {
+        if (currentUserService.UserRole != Data.Enums.UserRoles.Admin)
+        {
+            throw new ClosedAction();
+        }
         var product = await context.Products.FindAsync(id);
         if (product is null)
         {
@@ -60,16 +66,16 @@ public class ProductService : IProductService
         }
         var itemsWithId = await context.Products.Where(x => x.CategoryId == dto.CategoryId && x.ProductName.Contains(dto.FilterString)).ToListAsync();
         var finish = itemsWithId.Select(x => new GetProductDto {
-         Id = x.Id,
-         CategoryId = x.CategoryId,
-         AmountOfProduct = x.AmountOfProduct,
-         CountRate = x.CountRate,
-         CreatedAt = x.CreatedAt,
-         ProductDescription = x.ProductDescription,
-         ProductName = x.ProductName,
-         ProductImageUrl = x.ProductImageUrl,
-         ProductPrice = x.ProductPrice,
-         Rating = x.Rating
+             Id = x.Id,
+             CategoryId = x.CategoryId,
+             AmountOfProduct = x.AmountOfProduct,
+             CountRate = x.CountRate,
+             CreatedAt = x.CreatedAt,
+             ProductDescription = x.ProductDescription,
+             ProductName = x.ProductName,
+             ProductImageUrl = x.ProductImageUrl,
+             ProductPrice = x.ProductPrice,
+             Rating = x.Rating
         });
 
         return finish;
@@ -114,6 +120,10 @@ public class ProductService : IProductService
 
     public async Task PostProductByIdAsync(CreateProductWithCategoryIdDto dto)
     {
+        if (currentUserService.UserRole != Data.Enums.UserRoles.Admin)
+        {
+            throw new ClosedAction();
+        }
         var newProduct = new Product
         {
             ProductName = dto.ProductName,
@@ -130,6 +140,10 @@ public class ProductService : IProductService
 
     public async Task UpdateCategoryAsync(UpdateProductCategoryDto dto)
     {
+        if (currentUserService.UserRole != Data.Enums.UserRoles.Admin)
+        {
+            throw new ClosedAction();
+        }
         var product = await context.Products.FindAsync(dto.Id);
         if (product is null)
         {
@@ -141,6 +155,10 @@ public class ProductService : IProductService
 
     public async Task UpdateDescroptionAsync(UpdateDescriptionDto dto)
     {
+        if (currentUserService.UserRole != Data.Enums.UserRoles.Admin)
+        {
+            throw new ClosedAction();
+        }
         var product = await context.Products.FindAsync(dto.Id);
         if (product is null)
         {
@@ -152,6 +170,10 @@ public class ProductService : IProductService
 
     public async Task UpdateProductNameAsync(UpdateProductNameDto dto)
     {
+        if (currentUserService.UserRole != Data.Enums.UserRoles.Admin)
+        {
+            throw new ClosedAction();
+        }
         var product = await context.Products.FindAsync(dto.Id);
         if (product is null)
         {
@@ -163,6 +185,10 @@ public class ProductService : IProductService
 
     public async Task UpdateProductNameAsync(UpdateProductPriceDto dto)
     {
+        if (currentUserService.UserRole != Data.Enums.UserRoles.Admin)
+        {
+            throw new ClosedAction();
+        }
         var product = await context.Products.FindAsync(dto.Id);
         if (product is null)
         {

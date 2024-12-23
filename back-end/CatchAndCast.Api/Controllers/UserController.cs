@@ -26,8 +26,20 @@ namespace CatchAndCast.Api.Controllers
             var items = await context.GetAsync();
             return Ok(items);
         }
+        [HttpGet("all")]
+        public async Task<ActionResult> GetAll()
+        {
+            var items = await context.GetAllAsync();
+            return Ok(items);
+        }
+        [HttpPost("reset")]
+        public async Task<ActionResult> Get(ResetPasswordDto dto)
+        {
+            await context.ResetPassword(dto);
+            return Ok();
+        }
         [HttpPost("register")]
-        public async Task<ActionResult> Put(RegisterUserDto model)
+        public async Task<ActionResult> Post(RegisterUserDto model)
         {
             if (!ModelState.IsValid)
             {
@@ -55,7 +67,7 @@ namespace CatchAndCast.Api.Controllers
         {
             await context.UpdateFirstNameAsync(item);
             return Ok();
-        } 
+        }
         [HttpPut("second-name")]
         public async Task<ActionResult> Put(UpdateSecondNameDto item)
         {
@@ -72,6 +84,12 @@ namespace CatchAndCast.Api.Controllers
         public async Task<ActionResult> Delete()
         {
             await context.DeleteAsync();
+            return Ok();
+        }
+        [HttpDelete("{UserId}")]
+        public async Task<ActionResult> Delete(string UserId)
+        {
+            await context.DeleteUserAsync(UserId);
             return Ok();
         }
     }

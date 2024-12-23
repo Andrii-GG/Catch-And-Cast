@@ -57,6 +57,10 @@ public class CartService : ICartService
     public async Task<IEnumerable<Cart>> GetAll()
     {
         var items = await context.Carts.ToListAsync();
+        if(currentUserService.UserRole != Data.Enums.UserRoles.Admin)
+        {
+            throw new ClosedAction();
+        }
         return items;
     }
 

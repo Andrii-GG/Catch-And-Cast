@@ -10,9 +10,11 @@ namespace CatchAndCast.Service.Services;
 public class ProductCharacteristicService : IProductCharacteristicService
 {
     private readonly CatchAndCastContext context;
-    public ProductCharacteristicService(CatchAndCastContext _context)
+    private readonly ICurrentUserService currentUserService;
+    public ProductCharacteristicService(CatchAndCastContext _context, ICurrentUserService _currentUserService)
     {
         context = _context;
+        currentUserService = _currentUserService;
     }
 
     public async Task<List<ProductCharacteristic>> GetByProductIdAsync(int id)
@@ -27,6 +29,10 @@ public class ProductCharacteristicService : IProductCharacteristicService
 
     public async Task CreateCharacteristicAsync(CreateCharacteristicDto dto)
     {
+        if (currentUserService.UserRole != Data.Enums.UserRoles.Admin)
+        {
+            throw new ClosedAction();
+        }
         var item = new ProductCharacteristic
         {
             ProductId = dto.ProductId,
@@ -39,6 +45,10 @@ public class ProductCharacteristicService : IProductCharacteristicService
 
     public async Task DeleteAsync(int id)
     {
+        if (currentUserService.UserRole != Data.Enums.UserRoles.Admin)
+        {
+            throw new ClosedAction();
+        }
         var item = await context.Characteristics.FindAsync(id);
         if (item is null)
         {
@@ -50,6 +60,10 @@ public class ProductCharacteristicService : IProductCharacteristicService
 
     public async Task UpdateDescription(UpdateCharacteristicDto dto)
     {
+        if (currentUserService.UserRole != Data.Enums.UserRoles.Admin)
+        {
+            throw new ClosedAction();
+        }
         var item = await context.Characteristics.FindAsync(dto.Id);
         if (item is null)
         {
