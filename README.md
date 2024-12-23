@@ -1,86 +1,30 @@
-# Catch&Cast
+# Інструкція для запуску Backend API на C#
 
-## Table of Contents
-- [About the Project](#about-the-project)
-- [Features](#features)
-- [Technologies Used](#technologies-used)
-- [Getting Started](#getting-started)
-  - [Prerequisites](#prerequisites)
-  - [Installation](#installation)
-  - [Running the Project](#running-the-project)
-- [Usage](#usage)
-- [Contributing](#contributing)
-- [License](#license)
-- [Developers team](#developers-team)
+## Вимоги до середовища
 
-## About the Project
+1. **.NET SDK**: Завантажте та встановіть останню версію .NET SDK [з офіційного сайту](https://dotnet.microsoft.com/).
+2. **Microsoft SQL Server**.
+3. **IDE** (рекомендовано): [Visual Studio](https://visualstudio.microsoft.com/) або [Visual Studio Code](https://code.visualstudio.com/).
+4. **Git**: Встановіть [Git](https://git-scm.com/) для клонування репозиторію.
 
-This project is a [brief description of the project, e.g., "React application designed to help users manage tasks effectively"]. It was built to [mention the purpose of the project, e.g., "simplify task management and provide an intuitive user interface"].
+---
 
-## Features
+## Кроки запуску
 
-- Feature 1: Briefly describe each main feature.
-- Feature 2: e.g., Interactive UI with smooth animations.
-- Feature 3: Integration with backend API.
+### 1. Клонування репозиторію
 
-## Technologies Used
+### 2. Налаштування середовища:
 
-- **React** - Front-end library for building UI
-- **Redux** (if applicable) - For state management
-- **React Router** (if applicable) - For navigation
-- **Axios** (if applicable) - For handling HTTP requests
-- **Sass / CSS Modules** - For styling
-- **Other Libraries**: Any other specific libraries you used
+Файл `appsettings.json` або `appsettings.Development.json` повинен містити актуальні параметри підключення до бази даних. Можна скопіювати наступне:
 
-## Getting Started
+"ConnectionStrings": {
+"CatchAndCast": "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=CatchAndCast;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False"
+}
 
-Follow these instructions to set up the project on your local machine.
+### 3. Оновлення БД
 
-### Prerequisites
+У разі існування бази даних, зайдіть в SQL Server Object Explorer і видаліть існуючу базу даних, наступним кроком зайдіть в Package Manager Console, де виставляємо Default Project - CatchAndCast.Api, а у Solution Explorer CatchAndCast.Data встановлюємо як "Set as Startup Project". І у відкритій Package Manager Console прописуємо Update-Database. При виникненні помилок напишіть нам на гарячу лінію.
 
-- **Node.js** (version X.X.X or higher) - Ensure you have the latest version installed
-- **npm** or **yarn** - For package management
+### 4. Запуск
 
-### Installation
-
-1. Clone the repository:
-
-    ```bash
-    git clone https://github.com/your-username/project-name.git
-    ```
-
-2. Navigate to the project directory:
-
-    ```bash
-    cd my-app
-    ```
-
-3. Install dependencies:
-
-    ```bash
-    npm install
-    # or
-    yarn install
-    ```
-
-### Running the Project
-
-To start the development server, run:
-
-```bash
-npm start
-# or
-yarn start
-```
-
-### Developers team
-
-**Front-End developer** - Andrii_GG
-
-  
-
-**Back-End developer** - kkkurulo
-
-  
-
-**UI/UX designer** - martatut
+Встановлюємо Set as Startup Project проєкт CatchAndCast.Api і запускайте.
