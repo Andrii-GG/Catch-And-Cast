@@ -13,8 +13,9 @@ import MenuTab3 from "./MenuTab3";
 import { deleteFromFavorite } from "./deleteFromFavorite";
 import { addToFavorite } from "./addToFavorite";
 import { ApiUrl } from "./apiUrl";
+import { addToCart } from "./addToCart";
 
-function ItemPage({ breadcrumbNameMap }) {
+function ItemPage({ breadcrumbNameMap, cartItemCount, setCartItemCount }) {
   const navigate = useNavigate();
   const { itemId } = useParams();
   const [activeTab, setActiveTab] = useState("tab1");
@@ -56,8 +57,6 @@ function ItemPage({ breadcrumbNameMap }) {
     };
     fetchData();
   }, []);
-
- 
 
   const handleFavoriteToggle = () => {
     if (isFavorite) {
@@ -105,6 +104,15 @@ function ItemPage({ breadcrumbNameMap }) {
     setTimeout(() => {
       shareNotice.style.display = "none";
     }, 2000);
+  };
+
+  const handleAddToCart = (id) => {
+    if (!localStorage.getItem("accessToken")) {
+      navigate("/authorization");
+      return;
+    }
+    setCartItemCount(cartItemCount + 1);
+    addToCart(id);
   };
 
   return (
@@ -197,7 +205,10 @@ function ItemPage({ breadcrumbNameMap }) {
                 <img src="icons/bag.svg" alt="heart" />
                 <span>Купити</span>
               </button>
-              <button className="itemPage-cartButton">
+              <button
+                className="itemPage-cartButton"
+                onClick={() => handleAddToCart(item.id)}
+              >
                 <img src="icons/cart-black.svg" alt="bin" />
                 <span>У кошик</span>
               </button>

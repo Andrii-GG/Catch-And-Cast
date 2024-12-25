@@ -6,7 +6,7 @@ import { deleteFromCart } from "./deleteFromCart.js";
 import { putToCart } from "./putToCart.js";
 import { addToFavorite } from "./addToFavorite";
 
-function CartPage() {
+function CartPage({ cartItemCount, setCartItemCount }) {
   const navigate = useNavigate();
   const [price, setPrice] = useState(0);
   const [totalPrice, setTotalPrice] = useState(0);
@@ -177,7 +177,8 @@ function CartPage() {
                         prevCart
                           .map((cartItem) => {
                             if (cartItem.id === item.id) {
-                              if (cartItem.counterProducts === 1) return null; // Позначаємо для видалення
+                              setCartItemCount(cartItemCount - 1);
+                              if (cartItem.counterProducts === 1) return null;
                               return {
                                 ...cartItem,
                                 counterProducts: cartItem.counterProducts - 1,
@@ -201,6 +202,7 @@ function CartPage() {
                       setCartItems((prevCart) =>
                         prevCart.map((cartItem) => {
                           if (cartItem.id === item.id) {
+                            setCartItemCount(cartItemCount + 1);
                             return {
                               ...cartItem,
                               counterProducts: cartItem.counterProducts + 1,
@@ -230,10 +232,15 @@ function CartPage() {
                 <button
                   className="cart-item-removeButton"
                   onClick={() => {
-                    console.log(cartItems);
-                    debugger;
                     setCartItems((prevCart) =>
                       prevCart.filter((cartItem) => cartItem.id !== item.id)
+                    );
+                    cartItems.map((cartItem) =>
+                      cartItem.id ===item.id
+                        ? setCartItemCount(
+                            cartItemCount - cartItem.counterProducts
+                          )
+                        : cartItem
                     );
                     deleteFromCart(item.id);
                   }}

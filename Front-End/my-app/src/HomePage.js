@@ -9,7 +9,7 @@ import { addToFavorite } from "./addToFavorite";
 import { addToCart } from "./addToCart";
 import { ApiUrl } from "./apiUrl";
 
-function HomePage() {
+function HomePage({ cartItemCount, setCartItemCount }) {
   const navigate = useNavigate();
   const [isPositionOpen, setIsPositionOpen] = useState(false);
   const [catalog, setCatalog] = useState("Популярні товари");
@@ -92,6 +92,7 @@ function HomePage() {
       navigate("/authorization");
       return;
     }
+    setCartItemCount(cartItemCount + 1);
     addToCart(id);
   };
 

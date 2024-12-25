@@ -4,7 +4,7 @@ import Dropdown from "./Dropdown";
 import { ApiUrl } from "./apiUrl";
 import useFetch from "./useFetch";
 
-function Header({ setIsAuthPage }) {
+function Header({ cartItemCount, setCartItemCount }) {
   const navigate = useNavigate();
   const location = useLocation();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -18,10 +18,18 @@ function Header({ setIsAuthPage }) {
   });
 
   useEffect(() => {
-    let count = cart?.reduce((count, item) => count + item.counterProducts, 0);
+    setCartItemCount(
+      cart ? cart.reduce((count, item) => count + item.counterProducts, 0) : 0
+    );
+  }, [cart]);
+
+  useEffect(() => {
     const cartIcon = document.querySelector(".cart-icon");
     if (cartIcon) {
-      cartIcon.setAttribute("data-count", count > 0 ? count : "");
+      cartIcon.setAttribute(
+        "data-count",
+        cartItemCount > 0 ? cartItemCount : ""
+      );
     }
   });
 

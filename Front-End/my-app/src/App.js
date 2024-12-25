@@ -13,6 +13,7 @@ import CartPage from "./CartPage";
 import ItemPage from "./ItemPage";
 import AuthorizationForm from "./AuthorizationForm";
 import RegistrationForm from "./RegistrationForm";
+import { useState } from "react";
 
 const breadcrumbNameMap = {
   "/": "Головна",
@@ -26,27 +27,55 @@ function App() {
     location.pathname === "/authorization" ||
     location.pathname === "/registration";
 
+  const [cartItemCount, setCartItemCount] = useState(0);
+
   return (
     <div className="container">
-      {!isAuthPage && <Header />}
+      {!isAuthPage && (
+        <Header
+          cartItemCount={cartItemCount}
+          setCartItemCount={setCartItemCount}
+        />
+      )}
       <Routes>
         <Route path="/authorization" element={<AuthorizationForm />} />
         <Route path="/registration" element={<RegistrationForm />} />
         <Route
           path="/"
-          element={<HomePage breadcrumbNameMap={breadcrumbNameMap} />}
+          element={
+            <HomePage
+              cartItemCount={cartItemCount}
+              setCartItemCount={setCartItemCount}
+            />
+          }
         />
         <Route
           path="/favorite"
-          element={<FavoritePage breadcrumbNameMap={breadcrumbNameMap} />}
+          element={
+            <FavoritePage
+              cartItemCount={cartItemCount}
+              setCartItemCount={setCartItemCount}
+            />
+          }
         />
         <Route
           path="/cart"
-          element={<CartPage breadcrumbNameMap={breadcrumbNameMap} />}
+          element={
+            <CartPage
+              cartItemCount={cartItemCount}
+              setCartItemCount={setCartItemCount}
+            />
+          }
         />
         <Route
           path="/:itemId"
-          element={<ItemPage breadcrumbNameMap={breadcrumbNameMap} />}
+          element={
+            <ItemPage
+              breadcrumbNameMap={breadcrumbNameMap}
+              cartItemCount={cartItemCount}
+              setCartItemCount={setCartItemCount}
+            />
+          }
         />
       </Routes>
       {!isAuthPage && <Footer />}

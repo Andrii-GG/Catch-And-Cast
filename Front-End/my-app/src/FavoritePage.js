@@ -2,8 +2,9 @@ import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { deleteFromFavorite } from "./deleteFromFavorite";
 import { ApiUrl } from "./apiUrl";
+import { addToCart } from "./addToCart";
 
-function FavoritePage() {
+function FavoritePage({ cartItemCount, setCartItemCount }) {
   const navigate = useNavigate();
   const [favoriteItems, setFavoriteItems] = useState([]);
 
@@ -71,6 +72,15 @@ function FavoritePage() {
     deleteFromFavorite(id);
   };
 
+  const handleAddToCart = (id) => {
+    if (!localStorage.getItem("accessToken")) {
+      navigate("/authorization");
+      return;
+    }
+    setCartItemCount(cartItemCount + 1);
+    addToCart(id);
+  };
+
   return (
     <div className="favoritePage">
       <nav className="breadcrumbs">
@@ -128,7 +138,10 @@ function FavoritePage() {
           {favoriteItems.length != 0 &&
             favoriteItems.map((item) => (
               <div className="favorite-control" key={item.id} id={item.id}>
-                <button className="favorite-cart-button">
+                <button
+                  className="favorite-cart-button"
+                  onClick={() => handleAddToCart(item.id)}
+                >
                   <img src="icons/cart-black.svg"></img>
                   <span>У кошик</span>
                 </button>
