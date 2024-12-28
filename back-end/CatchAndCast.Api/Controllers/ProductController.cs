@@ -78,6 +78,12 @@ namespace CatchAndCast.Api.Controllers
             await productService.UpdateProductNameAsync(dto);
             return Ok();
         }
+        [HttpPut("image")]
+        public async Task<ActionResult> Put(UpdateImageDto dto)
+        {
+            await productService.UpdateImageAsync(dto);
+            return Ok();
+        }
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id) {
             await productService.DeleteAsync(id);

@@ -197,6 +197,19 @@ public class ProductService : IProductService
         product.ProductPrice = dto.Price;
         await context.SaveChangesAsync();
     }
+    public async Task UpdateImageAsync(UpdateImageDto dto)
+    {
+        if (currentUserService.UserRole != Data.Enums.UserRoles.Admin)
+        {
+            throw new ClosedAction();
+        }
+        var product = await context.Products.FindAsync(dto.Id);
+        if (product is null)
+        {
+            throw new ItemNotFound();
+        }
+        product.ProductImageUrl = dto.Image;
+        await context.SaveChangesAsync();
+    }
 
-  
 }

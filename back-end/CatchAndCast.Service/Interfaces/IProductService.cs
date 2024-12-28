@@ -6,6 +6,7 @@ namespace CatchAndCast.Service.Interfaces;
 
 public interface IProductService
 {
+    Task UpdateImageAsync(UpdateImageDto dto);
     Task<IEnumerable<Product>> GetAllProductAsync();
     Task<GetProductWithCharacteristicDto> GetProductWithCharacteristicAsync(GetById dto);
     Task<IEnumerable<Product>> GetProductsByCategoryAsync(GetByCategory dto);
