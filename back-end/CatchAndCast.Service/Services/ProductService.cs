@@ -118,23 +118,26 @@ public class ProductService : IProductService
         return finishItem;
     }
 
-    public async Task PostProductByIdAsync(CreateProductWithCategoryIdDto dto)
+    public async Task PostProductByIdAsync(List<CreateProductWithCategoryIdDto> list)
     {
         if (currentUserService.UserRole != Data.Enums.UserRoles.Admin)
         {
             throw new ClosedAction();
         }
-        var newProduct = new Product
+        foreach (var dto in list)
         {
-            ProductName = dto.ProductName,
-            ProductPrice = dto.ProductPrice,
-            ProductDescription = dto.ProductDescription,
-            ProductImageUrl = dto.ProductImageUrl,
-            AmountOfProduct = dto.AmountOfProduct,
-            CategoryId = dto.CategoryId,
-            CreatedAt = DateTime.Now
-        };
-        await context.Products.AddAsync(newProduct);
+            var newProduct = new Product
+            {
+                ProductName = dto.ProductName,
+                ProductPrice = dto.ProductPrice,
+                ProductDescription = dto.ProductDescription,
+                ProductImageUrl = dto.ProductImageUrl,
+                AmountOfProduct = dto.AmountOfProduct,
+                CategoryId = dto.CategoryId,
+                CreatedAt = DateTime.Now
+            };
+            await context.Products.AddAsync(newProduct);
+        }
         await context.SaveChangesAsync();
     }
 

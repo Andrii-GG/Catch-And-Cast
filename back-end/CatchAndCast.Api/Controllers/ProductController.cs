@@ -48,7 +48,7 @@ namespace CatchAndCast.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> Post(CreateProductWithCategoryIdDto dto)
+        public async Task<ActionResult> Post(List<CreateProductWithCategoryIdDto> dto)
         {
             await productService.PostProductByIdAsync(dto);
             return Ok();

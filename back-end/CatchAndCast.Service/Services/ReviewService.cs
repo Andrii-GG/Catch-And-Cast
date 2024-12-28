@@ -85,7 +85,7 @@ public class ReviewService : IReviewService
 
     public async Task<IEnumerable<GetReviewsByProductIdDto>> GetByProductId(int id)
     {
-        if(await context.Products.FindAsync(id) is null)
+        if (await context.Products.FindAsync(id) is null)
         {
             throw new ItemNotFound();
         }
@@ -96,6 +96,7 @@ public class ReviewService : IReviewService
             Rate = x.Rate,
             Comment = x.Comment,
             UserId = x.UserId,
+            UserName = context.Users.FirstOrDefault(u => u.Id == x.UserId)?.FirstName + " " + context.Users.FirstOrDefault(u => u.Id == x.UserId)?.SecondName,
             AddDate = x.AddDate
         });
         return finishItems;
