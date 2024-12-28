@@ -3,10 +3,15 @@ import { useNavigate, Link } from "react-router-dom";
 import { deleteFromFavorite } from "./deleteFromFavorite";
 import { ApiUrl } from "./apiUrl";
 import { addToCart } from "./addToCart";
+import { useDispatch, useSelector } from "react-redux";
+import { incrementCartItemCount } from "./store";
 
-function FavoritePage({ cartItemCount, setCartItemCount }) {
+function FavoritePage() {
+  const dispatch = useDispatch();
+
   const navigate = useNavigate();
   const [favoriteItems, setFavoriteItems] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const path = [window.location.pathname];
@@ -52,6 +57,8 @@ function FavoritePage({ cartItemCount, setCartItemCount }) {
         }
       } catch (error) {
         console.error("Failed to fetch favorite items:", error);
+      } finally {
+        setLoading(false);
       }
     };
     fetchData();
@@ -77,7 +84,7 @@ function FavoritePage({ cartItemCount, setCartItemCount }) {
       navigate("/authorization");
       return;
     }
-    setCartItemCount(cartItemCount + 1);
+    dispatch(incrementCartItemCount());
     addToCart(id);
   };
 
@@ -102,6 +109,11 @@ function FavoritePage({ cartItemCount, setCartItemCount }) {
       </nav>
       <section className="favorite-title">Вибране</section>
       <section className="favorite-items-container">
+        {loading ? (
+          <p style={{ margin: "32px 0px 0px 32px" }}>Завантаження...</p>
+        ) : (
+          ""
+        )}
         <div className="favorite-items-block">
           {favoriteItems.length != 0 &&
             favoriteItems.map((item) => (
@@ -158,7 +170,7 @@ function FavoritePage({ cartItemCount, setCartItemCount }) {
               </div>
             ))}
         </div>
-        {favoriteItems.length == 0 && (
+        {favoriteItems.length === 0 && !loading && (
           <div className="favorite-empty">Пусто</div>
         )}
       </section>

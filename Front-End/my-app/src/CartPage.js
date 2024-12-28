@@ -5,13 +5,22 @@ import { deleteFromFavorite } from "./deleteFromFavorite";
 import { deleteFromCart } from "./deleteFromCart.js";
 import { putToCart } from "./putToCart.js";
 import { addToFavorite } from "./addToFavorite";
+import { useDispatch } from "react-redux";
+import {
+  decrementCartItemCount,
+  incrementCartItemCount,
+  incrementCartItemCountByAmount,
+} from "./store/cartItemCountSlice.js";
 
-function CartPage({ cartItemCount, setCartItemCount }) {
+function CartPage() {
+  const dispatch = useDispatch();
+
   const navigate = useNavigate();
   const [price, setPrice] = useState(0);
   const [totalPrice, setTotalPrice] = useState(0);
   const [discount, setDiscount] = useState(0);
   const [cartItems, setCartItems] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const [favoriteItems, setFavoriteItems] = useState([]);
 
@@ -32,6 +41,8 @@ function CartPage({ cartItemCount, setCartItemCount }) {
         }
       } catch (error) {
         console.error("Failed to fetch favorite items:", error);
+      } finally {
+        setLoading(false);
       }
     };
     fetchData();
@@ -142,6 +153,11 @@ function CartPage({ cartItemCount, setCartItemCount }) {
         </ul>
       </nav>
       <div className="cart-title">Мій кошик</div>
+      {loading ? (
+        <p style={{ margin: "32px 0px 0px 32px" }}>Завантаження...</p>
+      ) : (
+        ""
+      )}
       <section className="cart-items">
         {cartItems &&
           cartItems.map((item) => {
@@ -177,7 +193,7 @@ function CartPage({ cartItemCount, setCartItemCount }) {
                         prevCart
                           .map((cartItem) => {
                             if (cartItem.id === item.id) {
-                              setCartItemCount(cartItemCount - 1);
+                              dispatch(decrementCartItemCount());
                               if (cartItem.counterProducts === 1) return null;
                               return {
                                 ...cartItem,
@@ -202,7 +218,7 @@ function CartPage({ cartItemCount, setCartItemCount }) {
                       setCartItems((prevCart) =>
                         prevCart.map((cartItem) => {
                           if (cartItem.id === item.id) {
-                            setCartItemCount(cartItemCount + 1);
+                            dispatch(incrementCartItemCount());
                             return {
                               ...cartItem,
                               counterProducts: cartItem.counterProducts + 1,
@@ -236,9 +252,11 @@ function CartPage({ cartItemCount, setCartItemCount }) {
                       prevCart.filter((cartItem) => cartItem.id !== item.id)
                     );
                     cartItems.map((cartItem) =>
-                      cartItem.id ===item.id
-                        ? setCartItemCount(
-                            cartItemCount - cartItem.counterProducts
+                      cartItem.id === item.id
+                        ? dispatch(
+                            incrementCartItemCountByAmount(
+                              -cartItem.counterProducts
+                            )
                           )
                         : cartItem
                     );
@@ -252,7 +270,9 @@ function CartPage({ cartItemCount, setCartItemCount }) {
               </div>
             );
           })}
-        {cartItems.length == 0 && <div className="cart-empty">Пусто</div>}
+        {cartItems.length === 0 && loading && (
+          <div className="cart-empty">Пусто</div>
+        )}
       </section>
       <section className="cart-control">
         <div className="cart-control-promoTitle">

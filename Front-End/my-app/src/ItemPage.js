@@ -14,8 +14,13 @@ import { deleteFromFavorite } from "./deleteFromFavorite";
 import { addToFavorite } from "./addToFavorite";
 import { ApiUrl } from "./apiUrl";
 import { addToCart } from "./addToCart";
+import { useDispatch, useSelector } from "react-redux";
+import { incrementCartItemCount } from "./store";
 
-function ItemPage({ breadcrumbNameMap, cartItemCount, setCartItemCount }) {
+function ItemPage() {
+  const breadcrumbNameMap = useSelector((state) => state.breadcrumbNameMap);
+  const dispatch = useDispatch();
+
   const navigate = useNavigate();
   const { itemId } = useParams();
   const [activeTab, setActiveTab] = useState("tab1");
@@ -68,7 +73,7 @@ function ItemPage({ breadcrumbNameMap, cartItemCount, setCartItemCount }) {
     }
   };
 
-  if (!item) {
+  if (error) {
     return (
       <div className="itemPage" style={{ fontSize: "24px" }}>
         <div className="invalidPage">
@@ -111,7 +116,7 @@ function ItemPage({ breadcrumbNameMap, cartItemCount, setCartItemCount }) {
       navigate("/authorization");
       return;
     }
-    setCartItemCount(cartItemCount + 1);
+    dispatch(incrementCartItemCount());
     addToCart(id);
   };
 
@@ -152,12 +157,7 @@ function ItemPage({ breadcrumbNameMap, cartItemCount, setCartItemCount }) {
           <p style={{ margin: "0px 0px 32px 0px" }}>Завантаження...</p>
         ) : (
           ""
-        )}
-        {error ? (
-          <p style={{ margin: "0px 0px 32px 0px" }}>Помилка: {error}</p>
-        ) : (
-          ""
-        )}
+        )}{" "}
         <>
           <div className="itemPage-main">
             <img

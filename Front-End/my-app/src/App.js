@@ -13,13 +13,6 @@ import CartPage from "./CartPage";
 import ItemPage from "./ItemPage";
 import AuthorizationForm from "./AuthorizationForm";
 import RegistrationForm from "./RegistrationForm";
-import { useState } from "react";
-
-const breadcrumbNameMap = {
-  "/": "Головна",
-  "/favorite": "Вибране",
-  "/cart": "Кошик",
-};
 
 function App() {
   const location = useLocation();
@@ -27,56 +20,16 @@ function App() {
     location.pathname === "/authorization" ||
     location.pathname === "/registration";
 
-  const [cartItemCount, setCartItemCount] = useState(0);
-
   return (
     <div className="container">
-      {!isAuthPage && (
-        <Header
-          cartItemCount={cartItemCount}
-          setCartItemCount={setCartItemCount}
-        />
-      )}
+      {!isAuthPage && <Header />}
       <Routes>
         <Route path="/authorization" element={<AuthorizationForm />} />
         <Route path="/registration" element={<RegistrationForm />} />
-        <Route
-          path="/"
-          element={
-            <HomePage
-              cartItemCount={cartItemCount}
-              setCartItemCount={setCartItemCount}
-            />
-          }
-        />
-        <Route
-          path="/favorite"
-          element={
-            <FavoritePage
-              cartItemCount={cartItemCount}
-              setCartItemCount={setCartItemCount}
-            />
-          }
-        />
-        <Route
-          path="/cart"
-          element={
-            <CartPage
-              cartItemCount={cartItemCount}
-              setCartItemCount={setCartItemCount}
-            />
-          }
-        />
-        <Route
-          path="/:itemId"
-          element={
-            <ItemPage
-              breadcrumbNameMap={breadcrumbNameMap}
-              cartItemCount={cartItemCount}
-              setCartItemCount={setCartItemCount}
-            />
-          }
-        />
+        <Route path="/" element={<HomePage />} />
+        <Route path="/favorite" element={<FavoritePage />} />
+        <Route path="/cart" element={<CartPage />} />
+        <Route path="/:itemId" element={<ItemPage />} />
       </Routes>
       {!isAuthPage && <Footer />}
     </div>

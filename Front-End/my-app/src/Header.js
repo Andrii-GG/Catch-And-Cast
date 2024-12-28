@@ -3,14 +3,19 @@ import { useLocation, useNavigate } from "react-router-dom";
 import Dropdown from "./Dropdown";
 import { ApiUrl } from "./apiUrl";
 import useFetch from "./useFetch";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchSearchData, setCartItemCount, setFilter } from "./store";
 
-function Header({ cartItemCount, setCartItemCount }) {
+function Header() {
+  const cartItemCount = useSelector((state) => state.cartItemCount);
+  const filter = useSelector((state) => state.filter);
+  const dispatch = useDispatch();
+
   const navigate = useNavigate();
   const location = useLocation();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [filter, setFilter] = useState("Всі товари");
 
-  const { data: cart, error } = useFetch(`${ApiUrl}/api/cart`, {
+  const { data: cart } = useFetch(`${ApiUrl}/api/cart`, {
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
@@ -18,8 +23,10 @@ function Header({ cartItemCount, setCartItemCount }) {
   });
 
   useEffect(() => {
-    setCartItemCount(
-      cart ? cart.reduce((count, item) => count + item.counterProducts, 0) : 0
+    dispatch(
+      setCartItemCount(
+        cart ? cart.reduce((count, item) => count + item.counterProducts, 0) : 0
+      )
     );
   }, [cart]);
 
@@ -146,6 +153,28 @@ function Header({ cartItemCount, setCartItemCount }) {
     }
   };
 
+  const handleSearch = () => {
+    const searchString = document.querySelector(".header-input").value;
+    dispatch(setFilter({ searchString: searchString }));
+    const isOnlySpaces = (str) => str.trim() === "";
+
+    if (location.pathname !== "/") navigate("/");
+
+    if (!isOnlySpaces(searchString)) {
+      dispatch(
+        fetchSearchData(
+          `${ApiUrl}/api/product/filter?${
+            filter.categoryId !== 0 ? `CategoryId=${filter.categoryId}` : ""
+          }&FilterString=${searchString}`
+        )
+      );
+      const categoryTitle = document.querySelector(
+        ".breadcrumbs-block > ul > li:nth-child(2) > span:nth-child(2)"
+      );
+      if (categoryTitle) categoryTitle.textContent = filter.categoryName;
+    }
+  };
+
   return (
     <header className="header">
       <img
@@ -158,7 +187,7 @@ function Header({ cartItemCount, setCartItemCount }) {
       ></img>
       <div className="header-input-group">
         <button className="header-category">
-          <p onClick={handleClick}>{filter}</p>
+          <p onClick={handleClick}>{filter.categoryName}</p>
           <img
             src="/icons/arrow-down.svg"
             alt="likes"
@@ -166,11 +195,21 @@ function Header({ cartItemCount, setCartItemCount }) {
             onClick={handleClick}
           ></img>
         </button>
-        <input type="text" placeholder="" className="header-input" />
+        <input
+          type="text"
+          placeholder=""
+          className="header-input"
+          onKeyDown={(event) => {
+            if (event.key === "Enter") handleSearch();
+          }}
+        />
         <img
           src="/icons/search.svg"
           alt="search"
           className="header-search"
+          onClick={() => {
+            handleSearch();
+          }}
         ></img>
       </div>
       <div className="icons-block">
@@ -214,7 +253,7 @@ function Header({ cartItemCount, setCartItemCount }) {
       <Dropdown
         isOpen={isDropdownOpen}
         setOpen={setIsDropdownOpen}
-        setFilter={setFilter}
+        handleSearch={handleSearch}
       ></Dropdown>
     </header>
   );

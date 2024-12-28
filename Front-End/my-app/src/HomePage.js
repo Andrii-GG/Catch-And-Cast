@@ -8,41 +8,25 @@ import { deleteFromFavorite } from "./deleteFromFavorite";
 import { addToFavorite } from "./addToFavorite";
 import { addToCart } from "./addToCart";
 import { ApiUrl } from "./apiUrl";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchSearchData, incrementCartItemCount, setFilter } from "./store";
 
-function HomePage({ cartItemCount, setCartItemCount }) {
+function HomePage() {
+  const dispatch = useDispatch();
+  const filter = useSelector((state) => state.filter);
+
+  const items = useSelector((state) => state.searchItems.data);
+  const loading = useSelector((state) => state.searchItems.loading);
+  const error = useSelector((state) => state.searchItems.error);
+
   const navigate = useNavigate();
   const [isPositionOpen, setIsPositionOpen] = useState(false);
-  const [catalog, setCatalog] = useState("Популярні товари");
 
   const { data: category } = useFetch(`${ApiUrl}/api/category`);
   const [favoriteItems, setFavoriteItems] = useState([]);
 
-  const [items, setItems] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  const fetchData = async (url, options = {}) => {
-    setLoading(true);
-    setError(null);
-
-    try {
-      const response = await fetch(url, options);
-
-      if (!response.ok) {
-        throw new Error(`Error: ${response.status}`);
-      }
-
-      const result = await response.json();
-      setItems(result);
-      console.log(result);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
   useEffect(() => {
-    fetchData(`${ApiUrl}/api/product`);
+    dispatch(fetchSearchData(`${ApiUrl}/api/product`));
   }, []);
 
   useEffect(() => {
@@ -92,7 +76,7 @@ function HomePage({ cartItemCount, setCartItemCount }) {
       navigate("/authorization");
       return;
     }
-    setCartItemCount(cartItemCount + 1);
+    dispatch(incrementCartItemCount());
     addToCart(id);
   };
 
@@ -156,8 +140,13 @@ function HomePage({ cartItemCount, setCartItemCount }) {
           ></img>
           <span
             onClick={() => {
-              setCatalog("Популярні товари");
-              fetchData(`${ApiUrl}/api/product`);
+              dispatch(
+                setFilter({ categoryName: "Всі товари", searchString: "" })
+              );
+              dispatch(fetchSearchData(`${ApiUrl}/api/product`));
+              document.querySelector(
+                ".breadcrumbs-block > ul > li:nth-child(2) > span:nth-child(2)"
+              ).textContent = "Всі товари";
             }}
           >
             Каталог
@@ -179,9 +168,19 @@ function HomePage({ cartItemCount, setCartItemCount }) {
                       className="category-item"
                       key={category.categoryName}
                       onClick={() => {
-                        setCatalog(category.categoryName);
-                        fetchData(
-                          `${ApiUrl}/api/product/category-id?CategoryId=${category.id}`
+                        dispatch(
+                          setFilter({
+                            categoryName: category.categoryName,
+                            searchString: "",
+                          })
+                        );
+                        document.querySelector(
+                          ".breadcrumbs-block > ul > li:nth-child(2) > span:nth-child(2)"
+                        ).textContent = category.categoryName;
+                        dispatch(
+                          fetchSearchData(
+                            `${ApiUrl}/api/product/category-id?CategoryId=${category.id}`
+                          )
                         );
                       }}
                     >
@@ -201,15 +200,38 @@ function HomePage({ cartItemCount, setCartItemCount }) {
         <ul>
           <li
             onClick={() => {
-              setCatalog("Популярні товари");
+              dispatch(
+                setFilter({ categoryName: "Всі товари", searchString: "" })
+              );
+              dispatch(fetchSearchData(`${ApiUrl}/api/product`));
             }}
           >
             <span className="breadcrumbs-title">Головна сторінка</span>
           </li>
-          <li>
+          <li
+            onClick={() => {
+              dispatch(setFilter({ searchString: "" }));
+              dispatch(
+                fetchSearchData(
+                  `${ApiUrl}/api/product${
+                    filter.categoryId === 0
+                      ? ""
+                      : `/category-id?CategoryId=${filter.categoryId}`
+                  }`
+                )
+              );
+            }}
+          >
             <span>/</span>
-            <span className="breadcrumbs-title">{catalog}</span>
+            <span className="breadcrumbs-title">Всі товари</span>
           </li>
+
+          {filter.searchString && (
+            <li>
+              <span>/</span>
+              <span className="breadcrumbs-title">{filter.searchString}</span>
+            </li>
+          )}
         </ul>
       </nav>
       <section className="items-container">
@@ -223,75 +245,76 @@ function HomePage({ cartItemCount, setCartItemCount }) {
         ) : (
           ""
         )}
-        {items && items.length > 0 ? (
-          items.map((item) => {
-            const isFavorite = favoriteItems.some((favId) => favId === item.id);
-            return (
-              <div className="item-block" key={item.id} id={item.id}>
-                <img
-                  alt={item.productName}
-                  src={item.productImageUrl}
-                  className="item-img"
-                  onClick={() => {
-                    goToItem(item);
-                  }}
-                ></img>
-                <div className="item-heart-icon">
+        {items && items.length > 0
+          ? items.map((item) => {
+              const isFavorite = favoriteItems.some(
+                (favId) => favId === item.id
+              );
+              return (
+                <div className="item-block" key={item.id} id={item.id}>
                   <img
-                    src={`/icons/heart-${
-                      // item.favorite
-                      isFavorite ? "black-filled" : "black"
-                    }.svg`}
-                    className="icon-w-30 "
-                    onClick={() => handleFavoriteToggle(item.id, isFavorite)}
+                    alt={item.productName}
+                    src={item.productImageUrl}
+                    className="item-img"
+                    onClick={() => {
+                      goToItem(item);
+                    }}
                   ></img>
+                  <div className="item-heart-icon">
+                    <img
+                      src={`/icons/heart-${
+                        isFavorite ? "black-filled" : "black"
+                      }.svg`}
+                      className="icon-w-30 "
+                      onClick={() => handleFavoriteToggle(item.id, isFavorite)}
+                    ></img>
+                  </div>
+                  <div className="item-share-icon">
+                    <img
+                      src="/icons/share.svg"
+                      className="icon-w-30 "
+                      onClick={shareButton}
+                    ></img>
+                  </div>
+                  <span
+                    className="item-title"
+                    onClick={() => {
+                      goToItem(item);
+                    }}
+                  >
+                    {item.productName}
+                  </span>
+                  <span className="item-description">
+                    {item.productDescription} <br></br>
+                    <img
+                      src={`/icons/rating-${item.rating}.svg`}
+                      className="item-rating-icon"
+                    ></img>
+                  </span>
+                  <span className="item-price">
+                    {item.productPrice.toLocaleString()} грн
+                  </span>
+                  <span className="item-vertical"></span>
+                  <span className="item-horizontal"></span>
+                  <button className="buy-button">
+                    <img src="icons/bag.svg"></img>
+                    <span>Купити</span>
+                  </button>
+                  <button
+                    className="cart-button"
+                    onClick={() => handleAddToCart(item.id)}
+                  >
+                    <img src="icons/cart-black.svg"></img>
+                    <span>У корзину</span>
+                  </button>
                 </div>
-                <div className="item-share-icon">
-                  <img
-                    src="/icons/share.svg"
-                    className="icon-w-30 "
-                    onClick={shareButton}
-                  ></img>
-                </div>
-                <span
-                  className="item-title"
-                  onClick={() => {
-                    goToItem(item);
-                  }}
-                >
-                  {item.productName}
-                </span>
-                <span className="item-description">
-                  {item.productDescription} <br></br>
-                  <img
-                    src={`/icons/rating-${item.rating}.svg`}
-                    className="item-rating-icon"
-                  ></img>
-                </span>
-                <span className="item-price">
-                  {item.productPrice.toLocaleString()} грн
-                </span>
-                <span className="item-vertical"></span>
-                <span className="item-horizontal"></span>
-                <button className="buy-button">
-                  <img src="icons/bag.svg"></img>
-                  <span>Купити</span>
-                </button>
-                <button
-                  className="cart-button"
-                  onClick={() => handleAddToCart(item.id)}
-                >
-                  <img src="icons/cart-black.svg"></img>
-                  <span>У корзину</span>
-                </button>
-              </div>
-            );
-          })
-        ) : (
-          <p style={{ margin: "0px 0px 32px", justifySelf: "center" }}>
-            Товарів не знайдено
-          </p>
-        )}
+              );
+            })
+          : !loading && (
+              <p style={{ margin: "0px 0px 32px", justifySelf: "center" }}>
+                Товарів не знайдено
+              </p>
+            )}
       </section>
       <Position isOpen={isPositionOpen} setOpen={setIsPositionOpen}></Position>
       <span className="share-notice">Посилання на товар скопійоване!</span>

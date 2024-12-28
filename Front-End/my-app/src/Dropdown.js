@@ -2,12 +2,24 @@ import React, { useState, useEffect, useRef } from "react";
 import ReactDOM from "react-dom";
 import useFetch from "./useFetch";
 import { ApiUrl } from "./apiUrl";
+import { useDispatch } from "react-redux";
+import { setFilter } from "./store";
+import { useLocation } from "react-router-dom";
 
-const Dropdown = ({ isOpen, setOpen, setFilter }) => {
+const Dropdown = ({ isOpen, setOpen, handleSearch }) => {
+  const location = useLocation();
+  const dispatch = useDispatch();
   const { data: category } = useFetch(`${ApiUrl}/api/category`);
 
   useEffect(() => {
     const dropdownMenu = document.querySelector(".dropdown-wall");
+
+    if (location !== "/") {
+      dropdownMenu.style.top =
+        document.querySelector(".header-category").getBoundingClientRect().top +
+        40 +
+        "px";
+    }
 
     if (dropdownMenu) {
       if (isOpen) {
@@ -25,7 +37,7 @@ const Dropdown = ({ isOpen, setOpen, setFilter }) => {
     dropdownMenu.style.width = window.getComputedStyle(
       document.querySelector(".header-category")
     ).width;
-    
+
     let inputPosition = document.querySelector(".home-inputPosition");
     if (inputPosition) {
       inputPosition = inputPosition.getBoundingClientRect();
@@ -62,9 +74,14 @@ const Dropdown = ({ isOpen, setOpen, setFilter }) => {
       "px";
   };
 
-  function handleClick(name) {
-    localStorage.setItem("filter", name);
-    setFilter(name);
+  function handleClick(item) {
+    dispatch(
+      setFilter({
+        categoryId: item.id,
+        categoryName: item.categoryName,
+      })
+    );
+
     setOpen(false);
     document
       .querySelector(".header-arrow")
@@ -77,7 +94,10 @@ const Dropdown = ({ isOpen, setOpen, setFilter }) => {
         <ul>
           <li
             onClick={() => {
-              handleClick("Всі товари");
+              handleClick({
+                id: "Всі товари",
+                categoryId: 0,
+              });
             }}
           >
             Всі товари
@@ -87,7 +107,7 @@ const Dropdown = ({ isOpen, setOpen, setFilter }) => {
               <li
                 key={item.categoryName}
                 onClick={() => {
-                  handleClick(item.categoryName);
+                  handleClick(item);
                 }}
               >
                 {item.categoryName}

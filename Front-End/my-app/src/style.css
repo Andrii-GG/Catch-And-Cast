@@ -890,6 +890,7 @@ body {
   display: flex;
   flex-direction: row;
   list-style: none;
+  color: #1b4b6e;
 }
 
 .breadcrumbs span:not(.breadcrumbs-title) {
@@ -905,7 +906,11 @@ body {
 }
 
 .breadcrumbs li:last-of-type .breadcrumbs-title {
-  color: #1b4b6e;
+  color: black;
+}
+
+.breadcrumbs li:last-of-type .breadcrumbs-title:hover {
+  text-decoration: none;
 }
 
 /* ////////////////////////// CartPage ///////////////////////////////// */
