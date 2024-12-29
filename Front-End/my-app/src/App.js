@@ -13,6 +13,7 @@ import CartPage from "./CartPage";
 import ItemPage from "./ItemPage";
 import AuthorizationForm from "./AuthorizationForm";
 import RegistrationForm from "./RegistrationForm";
+import ProfilePage from "./ProfilePage";
 
 function App() {
   const location = useLocation();
@@ -29,6 +30,7 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/favorite" element={<FavoritePage />} />
         <Route path="/cart" element={<CartPage />} />
+        <Route path="/profile" element={<ProfilePage />} />
         <Route path="/:itemId" element={<ItemPage />} />
       </Routes>
       {!isAuthPage && <Footer />}

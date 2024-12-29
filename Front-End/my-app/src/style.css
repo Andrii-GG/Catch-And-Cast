@@ -90,6 +90,7 @@ body {
 }
 
 .header-input {
+  font-size: 18px;
   caret-color: #495057;
   background-color: #e0e7ec;
   padding-left: 10px;
@@ -378,15 +379,20 @@ body {
 }
 
 .catalog-block {
-  padding: 30px;
-  border-radius: 25px;
-  background-color: #f6f6f6;
   grid-column: span 3;
   grid-row: span 2;
-  display: grid;
-  grid-template-rows: 30px 1fr;
   font-weight: 400;
   font-size: 32px;
+  border-radius: 25px;
+  padding: 30px;
+  background-color: #f6f6f6;
+}
+
+.catalog-stickyBlock {
+  position: sticky;
+  top: 130px;
+  display: grid;
+  grid-template-rows: 40px 1fr;
 }
 
 .catalog-title {
@@ -468,11 +474,21 @@ body {
   margin-bottom: 0px;
 }
 
-.item-img {
-  height: 100%;
+.item-imgContainer {
+  width: 200px;
+  height: 200px;
+  overflow: hidden;
+  position: relative;
   grid-column: span 2;
   grid-row: span 2;
   cursor: pointer;
+}
+
+.item-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
 }
 
 .item-heart-icon,
@@ -729,6 +745,11 @@ body {
   background-color: #f6f6f6;
 }
 
+.favorite-disabled {
+  opacity: 0.5;
+  filter: grayscale(100%);
+}
+
 .favorite-item {
   display: grid;
   grid-template-columns: 200px 1fr 200px;
@@ -737,10 +758,20 @@ body {
   margin-top: 30px;
 }
 
-.favorite-item img {
+.favorite-item-imgContainer {
   grid-row: span 2;
+  width: 200px;
   height: 200px;
+  overflow: hidden;
+  position: relative;
   cursor: pointer;
+}
+
+.favorite-item-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
 }
 
 .favorite-item-title {
@@ -960,10 +991,20 @@ body {
   grid-template-rows: 40px 1fr 40px 30px 4px;
 }
 
-.cart-item img {
+.cart-item-imgContainer {
   grid-row: span 3;
+  width: 200px;
   height: 200px;
+  overflow: hidden;
+  position: relative;
   cursor: pointer;
+}
+
+.cart-item-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
 }
 
 .cart-item-title {
@@ -1068,6 +1109,8 @@ body {
 }
 
 .cart-control {
+  top: 110px;
+  position: sticky;
   border-radius: 20px;
   background-color: #f6f6f6;
   width: 320px;
@@ -1235,8 +1278,22 @@ body {
 }
 
 .itemPage-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.itemPage-imgContainer {
   grid-row: span 5;
+  width: 360px;
   height: 360px;
+  overflow: hidden;
+  position: relative;
+}
+
+.itemPage-imgContainer:hover img {
+  object-fit: contain;
 }
 
 .itemPage-title {
@@ -1380,6 +1437,222 @@ body {
   column-gap: 80px;
 }
 
+.menuTab3-block {
+  display: grid;
+  row-gap: 15px;
+}
+
+.menuTab3-item {
+  background-color: white;
+  border-radius: 20px;
+  display: grid;
+  padding: 30px;
+  grid-template-columns: 1fr 250px;
+  row-gap: 15px;
+}
+
+.menuTab3-rating-icon {
+  width: 250px;
+}
+
+.menuTab3-date {
+  color: #838383;
+  text-align: right;
+}
+
+.menuTab3-comment {
+}
+
+/* ///////////////////////// ProfilePage /////////////////////////////////// */
+
+.profilePage {
+  box-sizing: border-box;
+  min-height: calc(100vh - 240px);
+  margin-top: 100px;
+  padding: 30px;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  grid-template-columns: auto 1fr;
+  row-gap: 10px;
+  column-gap: 20px;
+}
+
+.profile-title {
+  grid-column: span 2;
+  padding: 10px 0px;
+  background-color: #f6f6f6;
+  border-radius: 20px;
+  text-align: center;
+  font-size: 30px;
+}
+
+.profile-list {
+  font-weight: 400;
+  font-size: 24px;
+  border-radius: 25px;
+  padding: 30px;
+  background-color: #f6f6f6;
+}
+
+.profile-list ul {
+  row-gap: 20px;
+  display: flex;
+  flex-direction: column;
+  margin: 0px;
+  padding: 0px;
+  list-style: none;
+}
+
+.profile-list li {
+  cursor: pointer;
+}
+
+.profile-container {
+  grid-row: span 2;
+  border-radius: 25px;
+  padding: 30px;
+  background-color: #f6f6f6;
+}
+
+.profileTab {
+  animation: tab-show 0.3s forwards;
+}
+
+.profileTab1-container {
+  display: grid;
+  grid-template-columns: 150px 1fr;
+  grid-template-rows: 50px 50px 50px;
+  column-gap: 20px;
+  font-size: 20px;
+}
+
+.profileTab1-container {
+  display: grid;
+  grid-template-columns: 150px 1fr;
+  grid-template-rows: 50px 50px 50px;
+  column-gap: 20px;
+}
+
+.profileTab1-name,
+.profileTab1-number,
+.profileTab1-data {
+  font-size: 20px;
+}
+
+.profileTab1-name {
+  font-weight: 600;
+}
+
+.profileTab1-avatar {
+  grid-row: span 3;
+  width: 100%;
+}
+
+.profileTab3-container {
+  display: grid;
+  grid-template-columns: 40%;
+  grid-template-rows: 30px 50px 50px 50px 60px 1fr;
+  column-gap: 20px;
+  row-gap: 12px;
+}
+
+.profileTab3-title {
+  align-content: end;
+  font-size: 24px;
+}
+
+.profileTab3-firstName,
+.profileTab3-secondName,
+.profileTab3-phoneNumber {
+  display: grid;
+  grid-template-columns: 1fr 150px;
+}
+
+.profileTab3-password {
+  display: grid;
+  grid-template-rows: 50px 50px 50px;
+  row-gap: 12px;
+}
+
+.profileTab3-firstName input,
+.profileTab3-secondName input,
+.profileTab3-phoneNumber input,
+.profileTab3-password input {
+  font-size: 18px;
+  height: 100%;
+  box-sizing: border-box;
+  background-color: #e0e7ec;
+  border-radius: 15px;
+  border: 1px solid black;
+  outline: none;
+  padding-left: 20px;
+  padding-right: 20px;
+  transition: 0.2s box-shadow ease-in-out;
+}
+
+.profileTab3-firstName button,
+.profileTab3-secondName button,
+.profileTab3-phoneNumber button,
+.profileTab3-password button {
+  height: 100%;
+  box-sizing: border-box;
+
+  cursor: pointer;
+  font-size: 18px;
+  color: white;
+  background-color: rgba(27, 75, 110, 0.712);
+  border: 1px solid black;
+  outline: none;
+  border-radius: 15px;
+  transition: 0.2s background-color ease-in-out;
+}
+
+.profileTab3-firstName button,
+.profileTab3-secondName button,
+.profileTab3-phoneNumber button {
+  margin-left: 10px;
+}
+
+.profileTab3-firstName button:hover,
+.profileTab3-secondName button:hover,
+.profileTab3-phoneNumber button:hover,
+.profileTab3-password button:hover {
+  background-color: rgba(27, 75, 110, 0.9);
+}
+
+.profileTab3-firstName input::placeholder,
+.profileTab3-secondName input::placeholder,
+.profileTab3-phoneNumber input::placeholder,
+.profileTab3-password input::placeholder {
+  color: #747474;
+}
+
+.profileTab3-firstName input:focus,
+.profileTab3-secondName input:focus,
+.profileTab3-phoneNumber input:focus,
+.profileTab3-password input:focus {
+  box-shadow: 0px 0px 5px 1px #757575;
+}
+
+.profileTab3-password input.error {
+  border: 1px solid red;
+  box-shadow: 0px 0px 5px 1px rgb(255, 147, 147);
+}
+
+.profile-exit {
+  color: rgb(255, 0, 0);
+  padding: 10px 0px;
+  background-color: #f6f6f6;
+  border-radius: 20px;
+  text-align: center;
+  font-size: 30px;
+  transition: all 0.3s ease-in-out;
+  cursor: pointer;
+}
+
+.profile-exit:hover {
+  color: rgb(211, 0, 0);
+}
 /* ///////////////////////// AuthorizationForm ///////////////////////////// */
 
 .AuthorizationForm {

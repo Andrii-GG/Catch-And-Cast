@@ -16,6 +16,7 @@ import { ApiUrl } from "./apiUrl";
 import { addToCart } from "./addToCart";
 import { useDispatch, useSelector } from "react-redux";
 import { incrementCartItemCount } from "./store";
+import roundToHalf from "./roundToHalf";
 
 function ItemPage() {
   const breadcrumbNameMap = useSelector((state) => state.breadcrumbNameMap);
@@ -129,27 +130,42 @@ function ItemPage() {
               <img src="icons/house.svg"></img>
             </Link>{" "}
           </li>
-          {pathnames.map((value, index) => {
-            let customName = breadcrumbNameMap[value];
+          {pathnames.length > 1 ? (
+            pathnames.map((value, index) => {
+              let customName = breadcrumbNameMap[value];
 
-            if (value == "/") {
-              return null;
-            }
-            if (!customName) {
-              customName = `${item?.productName || value}`;
-            }
-            return (
-              <li
-                key={value}
-                onClick={() => {
-                  navigate(value);
-                }}
-              >
-                <span> / </span>
-                <span className="breadcrumbs-title">{customName || value}</span>
-              </li>
-            );
-          })}
+              if (value == "/") {
+                return null;
+              }
+              if (!customName) {
+                customName = `${item?.productName || value}`;
+              }
+              return (
+                <li
+                  key={value}
+                  onClick={() => {
+                    navigate(value);
+                  }}
+                >
+                  <span> / </span>
+                  <span className="breadcrumbs-title">
+                    {customName || value}
+                  </span>
+                </li>
+              );
+            })
+          ) : (
+            <li
+              onClick={() => {
+                navigate(`/${item.id}`);
+              }}
+            >
+              <span> / </span>
+              <span className="breadcrumbs-title">{`${
+                item?.productName || `/${item?.id}`
+              }`}</span>
+            </li>
+          )}
         </ul>
       </nav>
       <section className="itemPage-container">
@@ -160,22 +176,25 @@ function ItemPage() {
         )}{" "}
         <>
           <div className="itemPage-main">
-            <img
-              src={item?.productImageUrl}
-              alt={item?.productName}
-              className="itemPage-img"
-            ></img>
+            <div className="itemPage-imgContainer">
+              {" "}
+              <img
+                alt={item?.productName}
+                src={item?.productImageUrl}
+                className="itemPage-img"
+              ></img>
+            </div>
             <span className="itemPage-title">{item?.productName}</span>
             <span className="itemPage-date">
               Товар додано: {new Date(item?.createdAt).toLocaleString()}
             </span>
             <img
-              src={`/icons/rating-${item?.rating}.svg`}
+              src={`/icons/rating-${roundToHalf(item?.rating)}.svg`}
               className="itemPage-rating-icon"
-              alt="item.productName"
+              alt={item?.productName}
             ></img>
             <span className="itemPage-item-amount">
-              Залишилося: {item?.countRate} од.{" "}
+              Залишилося: {item?.amountOfProduct} од.{" "}
             </span>
             <span className="itemPage-price">
               Ціна: {item?.productPrice.toLocaleString()} грн

@@ -117,14 +117,26 @@ function FavoritePage() {
         <div className="favorite-items-block">
           {favoriteItems.length != 0 &&
             favoriteItems.map((item) => (
-              <div className="favorite-item" key={item.id} id={item.id}>
-                <img
-                  src={item.productImageUrl}
-                  alt={item.productName}
+              <div
+                className={`favorite-item ${
+                  item.amountOfProduct === 0 ? "favorite-disabled" : ""
+                }`}
+                key={item.id}
+                id={item.id}
+              >
+                <div
+                  className="favorite-item-imgContainer"
                   onClick={() => {
                     goToItem(item);
                   }}
-                />
+                >
+                  {" "}
+                  <img
+                    alt={item.productName}
+                    src={item.productImageUrl}
+                    className="favorite-item-img"
+                  ></img>
+                </div>
                 <span
                   className="favorite-item-title"
                   onClick={() => {
@@ -140,7 +152,7 @@ function FavoritePage() {
                   {item.productPrice.toLocaleString()} грн{" "}
                 </span>
                 <span className="favorite-item-amount">
-                  Залишилося : {item.countRate} од.{" "}
+                  Залишилося : {item.amountOfProduct} од.{" "}
                 </span>
                 <span className="favorite-item-horizontal"></span>
               </div>

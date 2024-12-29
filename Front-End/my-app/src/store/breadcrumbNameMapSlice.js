@@ -6,6 +6,7 @@ export const breadcrumbNameMapSlice = createSlice({
     "/": "Головна",
     "/favorite": "Вибране",
     "/cart": "Кошик",
+    "/profile": "Профіль",
   },
 });
 

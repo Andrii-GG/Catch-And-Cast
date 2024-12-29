@@ -164,13 +164,19 @@ function CartPage() {
             const isFavorite = favoriteItems.some((favId) => favId === item.id);
             return (
               <div className="cart-item" key={item.id}>
-                <img
-                  src={item.productImageUrl}
-                  alt={item.productName}
+                <div
+                  className="cart-item-imgContainer"
                   onClick={() => {
                     goToItem(item);
                   }}
-                />
+                >
+                  {" "}
+                  <img
+                    alt={item.productName}
+                    src={item.productImageUrl}
+                    className="cart-item-img"
+                  ></img>
+                </div>
                 <span
                   className="cart-item-title"
                   onClick={() => {
@@ -270,7 +276,7 @@ function CartPage() {
               </div>
             );
           })}
-        {cartItems.length === 0 && loading && (
+        {cartItems.length === 0 && !loading && (
           <div className="cart-empty">Пусто</div>
         )}
       </section>

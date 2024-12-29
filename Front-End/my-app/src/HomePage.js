@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useRef } from "react";
-import ReactDOM from "react-dom";
+import React, { useState, useEffect } from "react";
+
 import Position from "./Position";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import useFetch from "./useFetch";
 import { deleteFromFavorite } from "./deleteFromFavorite";
@@ -10,6 +10,7 @@ import { addToCart } from "./addToCart";
 import { ApiUrl } from "./apiUrl";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchSearchData, incrementCartItemCount, setFilter } from "./store";
+import roundToHalf from "./roundToHalf.js";
 
 function HomePage() {
   const dispatch = useDispatch();
@@ -26,7 +27,12 @@ function HomePage() {
   const [favoriteItems, setFavoriteItems] = useState([]);
 
   useEffect(() => {
-    dispatch(fetchSearchData(`${ApiUrl}/api/product`));
+    if (filter.categoryId === 0 && filter.searchString === "")
+      dispatch(fetchSearchData(`${ApiUrl}/api/product`));
+    else
+      document.querySelector(
+        ".breadcrumbs-block > ul > li:nth-child(2) > span:nth-child(2)"
+      ).textContent = filter.categoryName;
   }, []);
 
   useEffect(() => {
@@ -126,74 +132,93 @@ function HomePage() {
           alt="logo"
           className="header-logo"
           onClick={() => {
+            window.scrollTo({
+              top: 0,
+              behavior: "smooth",
+            });
             navigate("/");
           }}
         ></img>
         <div className="home-inputPosition"></div>
       </section>
       <section className="catalog-block">
-        <div className="catalog-title">
-          <img
-            src="/icons/catalog.svg"
-            alt="catalog"
-            className="catalogIcon"
-          ></img>
-          <span
-            onClick={() => {
-              dispatch(
-                setFilter({ categoryName: "Всі товари", searchString: "" })
-              );
-              dispatch(fetchSearchData(`${ApiUrl}/api/product`));
-              document.querySelector(
-                ".breadcrumbs-block > ul > li:nth-child(2) > span:nth-child(2)"
-              ).textContent = "Всі товари";
-            }}
-          >
-            Каталог
-          </span>
-          <div className="positionIcon-block" onClick={openPositionModal}>
+        <div className="catalog-stickyBlock">
+          <div className="catalog-title">
             <img
-              src="/icons/position.svg"
+              src="/icons/catalog.svg"
               alt="catalog"
-              className="positionIcon"
+              className="catalogIcon"
             ></img>
+            <span
+              onClick={() => {
+                dispatch(
+                  setFilter({
+                    categoryId: 0,
+                    categoryName: "Всі товари",
+                    searchString: "",
+                  })
+                );
+                dispatch(fetchSearchData(`${ApiUrl}/api/product`));
+                document.querySelector(
+                  ".breadcrumbs-block > ul > li:nth-child(2) > span:nth-child(2)"
+                ).textContent = "Всі товари";
+                window.scrollTo({
+                  top: items.length >= 2 ? 380 : 0,
+                  behavior: "smooth",
+                });
+              }}
+            >
+              Каталог
+            </span>
+            <div className="positionIcon-block" onClick={openPositionModal}>
+              <img
+                src="/icons/position.svg"
+                alt="catalog"
+                className="positionIcon"
+              ></img>
+            </div>
           </div>
-        </div>
-        <div className="catalog-items">
-          <ul>
-            {category
-              ? category.map((category) => {
-                  return (
-                    <li
-                      className="category-item"
-                      key={category.categoryName}
-                      onClick={() => {
-                        dispatch(
-                          setFilter({
-                            categoryName: category.categoryName,
-                            searchString: "",
-                          })
-                        );
-                        document.querySelector(
-                          ".breadcrumbs-block > ul > li:nth-child(2) > span:nth-child(2)"
-                        ).textContent = category.categoryName;
-                        dispatch(
-                          fetchSearchData(
-                            `${ApiUrl}/api/product/category-id?CategoryId=${category.id}`
-                          )
-                        );
-                      }}
-                    >
-                      <img
-                        src={category.categoryImageUrl}
-                        alt={category.categoryName}
-                      ></img>
-                      <span> {category.categoryName}</span>
-                    </li>
-                  );
-                })
-              : ""}
-          </ul>
+          <div className="catalog-items">
+            <ul>
+              {category
+                ? category.map((category) => {
+                    return (
+                      <li
+                        className="category-item"
+                        key={category.categoryName}
+                        onClick={() => {
+                          dispatch(
+                            setFilter({
+                              categoryId: category.id,
+                              categoryName: category.categoryName,
+                              searchString: "",
+                            })
+                          );
+                          document.querySelector(
+                            ".breadcrumbs-block > ul > li:nth-child(2) > span:nth-child(2)"
+                          ).textContent = category.categoryName;
+                          dispatch(
+                            fetchSearchData(
+                              `${ApiUrl}/api/product/category-id?CategoryId=${category.id}`
+                            )
+                          );
+                          window.scrollTo({
+                            top: items.length >= 2 ? 380 : 0,
+                            behavior: "smooth",
+                          });
+                        }}
+                      >
+                        <img
+                          src={category.categoryImageUrl}
+                          alt={category.categoryName}
+                        ></img>
+                        <span> {category.categoryName}</span>
+                      </li>
+                    );
+                  })
+                : ""}
+            </ul>
+          </div>
         </div>
       </section>
       <nav className="breadcrumbs breadcrumbs-block">
@@ -201,9 +226,17 @@ function HomePage() {
           <li
             onClick={() => {
               dispatch(
-                setFilter({ categoryName: "Всі товари", searchString: "" })
+                setFilter({
+                  categoryId: 0,
+                  categoryName: "Всі товари",
+                  searchString: "",
+                })
               );
               dispatch(fetchSearchData(`${ApiUrl}/api/product`));
+              window.scrollTo({
+                top: items.length >= 2 ? 380 : 0,
+                behavior: "smooth",
+              });
             }}
           >
             <span className="breadcrumbs-title">Головна сторінка</span>
@@ -220,6 +253,10 @@ function HomePage() {
                   }`
                 )
               );
+              window.scrollTo({
+                top: items.length >= 2 ? 380 : 0,
+                behavior: "smooth",
+              });
             }}
           >
             <span>/</span>
@@ -252,14 +289,20 @@ function HomePage() {
               );
               return (
                 <div className="item-block" key={item.id} id={item.id}>
-                  <img
-                    alt={item.productName}
-                    src={item.productImageUrl}
-                    className="item-img"
+                  <div
+                    className="item-imgContainer"
                     onClick={() => {
                       goToItem(item);
                     }}
-                  ></img>
+                  >
+                    {" "}
+                    <img
+                      alt={item.productName}
+                      src={item.productImageUrl}
+                      className="item-img"
+                    ></img>
+                  </div>
+
                   <div className="item-heart-icon">
                     <img
                       src={`/icons/heart-${
@@ -287,7 +330,7 @@ function HomePage() {
                   <span className="item-description">
                     {item.productDescription} <br></br>
                     <img
-                      src={`/icons/rating-${item.rating}.svg`}
+                      src={`/icons/rating-${roundToHalf(item.rating)}.svg`}
                       className="item-rating-icon"
                     ></img>
                   </span>

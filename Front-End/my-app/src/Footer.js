@@ -49,6 +49,10 @@ function Footer() {
         src="logo-footer.svg"
         className="footer-logo"
         onClick={() => {
+          window.scrollTo({
+            top: 0,
+            behavior: "smooth",
+          });
           navigate("/");
         }}
       ></img>

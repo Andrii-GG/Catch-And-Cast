@@ -154,6 +154,10 @@ function Header() {
   };
 
   const handleSearch = () => {
+    window.scrollTo({
+      top: 380,
+      behavior: "smooth",
+    });
     const searchString = document.querySelector(".header-input").value;
     dispatch(setFilter({ searchString: searchString }));
     const isOnlySpaces = (str) => str.trim() === "";
@@ -244,7 +248,7 @@ function Header() {
             className="header-profile"
             onClick={() => {
               localStorage.getItem("accessToken")
-                ? alert("Марта зроби сторінку профілю")
+                ? navigate("/profile")
                 : navigate("/authorization");
             }}
           ></img>
