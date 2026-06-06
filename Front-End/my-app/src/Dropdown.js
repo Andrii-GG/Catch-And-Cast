@@ -95,8 +95,8 @@ const Dropdown = ({ isOpen, setOpen, handleSearch }) => {
           <li
             onClick={() => {
               handleClick({
-                id: "Всі товари",
-                categoryId: 0,
+                id: 0,
+                categoryName: "Всі товари",
               });
             }}
           >
